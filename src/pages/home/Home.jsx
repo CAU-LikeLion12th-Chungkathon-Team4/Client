@@ -1,20 +1,34 @@
 // Home.jsx
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
+import { loginHandler } from '../../api/api_login';
 
 const Home = () => {
-  const containerRef = useRef(null);
+  const [scrollControl, setScrollControl] = useState(0);
 
   useEffect(() => {
-    // 페이지 로드 시 스크롤을 아래로 설정
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
-    }
+    window.scrollTo({
+      top:5000,
+      behavior:'smooth'
+    });
+  }, [scrollControl]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setScrollControl(1);
+    }, 10);
+    return () => clearTimeout(timer);
   }, []);
 
   return (
-    <Container ref={containerRef}>
-      <Image src="/source/testImg.png" alt="Scroll Image" />
+    <Container >
+      <BackgroundWrapper>
+        <BackgroundImage src="/source/testImg.png" alt="Background" />
+      </BackgroundWrapper>
+      <Content>
+        <button onClick={loginHandler}>login</button>
+        <div>test</div>
+      </Content>
     </Container>
   );
 };
@@ -22,15 +36,31 @@ const Home = () => {
 export default Home;
 
 const Container = styled.div`
-  width: 100%;
-  overflow-y: scroll;
+  width: 375px;
   display: flex;
-  justify-content: center;
-  flex-direction: column-reverse;
+  flex-direction: column;
 `;
 
-const Image = styled.img`
+const BackgroundWrapper = styled.div`
+  position: absolute;
+  top:0;
+  width: 375px;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+`;
+
+const BackgroundImage = styled.img`
   width: 100%;
   height: auto;
-  object-fit: contain;
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
 `;
