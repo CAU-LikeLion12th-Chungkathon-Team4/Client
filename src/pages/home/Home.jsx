@@ -1,7 +1,6 @@
 // Home.jsx
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { loginHandler } from '../../api/api_login';
 
 const Home = () => {
   // 페이지 렌더링시 변수 변하게 해서 useEffect로 스크롤바 최하단으로 보내기 위한 로직
