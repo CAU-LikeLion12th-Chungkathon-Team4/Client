@@ -1,4 +1,4 @@
-// Landing.jsx
+// 랜딩페이지
 import React from "react";
 import { loginHandler } from "../../api/api_login";
 import { useNavigate } from "react-router-dom";
