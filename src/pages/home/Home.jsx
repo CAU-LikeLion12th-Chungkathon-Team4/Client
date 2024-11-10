@@ -1,9 +1,10 @@
 // Home.jsx
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { loginHandler } from '../../api/api_login';
 
 const Home = () => {
+  // 페이지 렌더링시 변수 변하게 해서 useEffect로 스크롤바 최하단으로 보내기 위한 로직
   const [scrollControl, setScrollControl] = useState(0);
 
   useEffect(() => {
@@ -13,6 +14,7 @@ const Home = () => {
     });
   }, [scrollControl]);
 
+  // 페이지 렌더링 후 곧바로 변수 바꾸는 함수 - 타이머로 10밀리초 뒤에 실행
   useEffect(() => {
     const timer = setTimeout(() => {
       setScrollControl(1);
@@ -22,9 +24,11 @@ const Home = () => {
 
   return (
     <Container >
+      {/* 배경이미지 넣기 위한 rapper */}
       <BackgroundWrapper>
         <BackgroundImage src="/source/testImg.png" alt="Background" />
       </BackgroundWrapper>
+      {/* Content 안의 요소들은 배경이미지 위에 렌더링. z-index를 1로 설정 */}
       <Content>
         <button onClick={loginHandler}>login</button>
         <div>test</div>
