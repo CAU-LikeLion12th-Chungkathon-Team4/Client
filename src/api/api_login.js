@@ -20,13 +20,16 @@ export const handleOAuth = async () => {
     if (code) {
       try {
 
-        const result = await axios.get(`https://photori.n-e.kr/login?code=${code}`);
+        // const result = await axios.get("https://photori.n-e.kr/test")
+        // console.log(result.data)
+
+        const result = await axios.post(`https://photori.n-e.kr/login?code=${code}`);
         console.log(result.data)
   
         localStorage.setItem("access", result.data.access_token); // 받아온 액세스 토큰을 로컬스토리지에 저장하여 관리
         localStorage.setItem("refresh", result.data.refresh_token); // 받아온 리프레시 토큰을 로컬스토리지에 저장하여 관리
         
-        window.location.href = "/";
+        //window.location.href = "/home";
         
       } catch (error) {
         console.error("Error fetching OAuth data", error); // 에러 메세지 확인용

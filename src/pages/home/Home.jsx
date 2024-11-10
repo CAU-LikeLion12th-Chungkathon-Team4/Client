@@ -30,7 +30,6 @@ const Home = () => {
       </BackgroundWrapper>
       {/* Content 안의 요소들은 배경이미지 위에 렌더링. z-index를 1로 설정 */}
       <Content>
-        <button onClick={loginHandler}>login</button>
         <div>test</div>
       </Content>
     </Container>
