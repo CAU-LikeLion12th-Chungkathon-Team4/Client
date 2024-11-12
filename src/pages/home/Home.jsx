@@ -17,7 +17,7 @@ const Home = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setScrollControl(1);
-    }, 10);
+    }, 100);
     return () => clearTimeout(timer);
   }, []);
 
