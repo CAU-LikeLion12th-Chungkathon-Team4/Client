@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const Home = () => {
-  // 페이지 렌더링시 변수 변하게 해서 useEffect로 스크롤바 최하단으로 보내기 위한 로직
   const [scrollControl, setScrollControl] = useState(0);
 
   useEffect(() => {
@@ -13,7 +12,6 @@ const Home = () => {
     });
   }, [scrollControl]);
 
-  // 페이지 렌더링 후 곧바로 변수 바꾸는 함수 - 타이머로 10밀리초 뒤에 실행
   useEffect(() => {
     const timer = setTimeout(() => {
       setScrollControl(1);
@@ -23,12 +21,12 @@ const Home = () => {
 
   return (
     <Container>
-      {/* 배경이미지 넣기 위한 rapper */}
       <BackgroundWrapper>
-        <BackgroundImage src="/source/testImg.png" alt="Background" />
+        <BackgroundImage src="/source/wallpaper.png" alt="Background" />
       </BackgroundWrapper>
       <Content>
-        <div>test</div>
+        <Nuts top="220px" left="160px">도토리1</Nuts>
+        <Nuts top="150px" left="160px">도토리2</Nuts>
       </Content>
     </Container>
   );
@@ -37,20 +35,28 @@ const Home = () => {
 export default Home;
 
 const Container = styled.div`
-  display: 100%;
+  width: 375px;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  justify-content: center;
+  align-items: center;
 `;
 
 const BackgroundWrapper = styled.div`
-  display: 100%;
   position: absolute;
   top: 0;
+  width: 100vw;
+  overflow-x: hidden;
   height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 0;
+
+  @media (min-width: 441px) {
+    width: 440px;
+  }
 `;
 
 const BackgroundImage = styled.img`
@@ -59,10 +65,27 @@ const BackgroundImage = styled.img`
 `;
 
 const Content = styled.div`
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 375px;
+  height: 100vh;
+`;
+
+const Nuts = styled.div`
+  position: absolute;
+  width: 50px; //크기 고정
+  height: 30px; //크기 고정
+  top: ${(props) => props.top}; /* 위치 조정을 위한 props */
+  left: ${(props) => props.left}; /* 위치 조정을 위한 props */
+  border: 2px solid black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  background-color: white;
 `;
