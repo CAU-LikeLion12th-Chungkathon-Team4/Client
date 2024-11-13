@@ -1,7 +1,6 @@
 // Home.jsx
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { loginHandler } from '../../api/api_login';
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
 const Home = () => {
   // 페이지 렌더링시 변수 변하게 해서 useEffect로 스크롤바 최하단으로 보내기 위한 로직
@@ -9,8 +8,8 @@ const Home = () => {
 
   useEffect(() => {
     window.scrollTo({
-      top:5000,
-      behavior:'smooth'
+      top: 5000,
+      behavior: "smooth",
     });
   }, [scrollControl]);
 
@@ -23,12 +22,11 @@ const Home = () => {
   }, []);
 
   return (
-    <Container >
+    <Container>
       {/* 배경이미지 넣기 위한 rapper */}
       <BackgroundWrapper>
         <BackgroundImage src="/source/testImg.png" alt="Background" />
       </BackgroundWrapper>
-      {/* Content 안의 요소들은 배경이미지 위에 렌더링. z-index를 1로 설정 */}
       <Content>
         <div>test</div>
       </Content>
@@ -39,15 +37,15 @@ const Home = () => {
 export default Home;
 
 const Container = styled.div`
-  width: 375px;
+  display: 100%;
   display: flex;
   flex-direction: column;
 `;
 
 const BackgroundWrapper = styled.div`
+  display: 100%;
   position: absolute;
-  top:0;
-  width: 375px;
+  top: 0;
   height: auto;
   display: flex;
   justify-content: center;
@@ -61,6 +59,7 @@ const BackgroundImage = styled.img`
 `;
 
 const Content = styled.div`
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
