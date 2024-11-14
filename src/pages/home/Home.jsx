@@ -1,5 +1,3 @@
-
-// Home.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -23,30 +21,29 @@ const Home = () => {
   return (
     <Container>
       <BackgroundWrapper>
-        <BackgroundImage src="/source/background.png" alt="Background" />
+        <Content>
+          <LockImagesWrapper>
+            {[...Array(23)].map((_, index) => (
+              <LockImage
+                key={index}
+                src="/source/lock.png"
+                alt="Lock"
+                align={index % 2 === 0 ? 'left' : 'right'}
+              />
+            ))}
+          </LockImagesWrapper>
+          <BottomSection>
+            <Title>람쥐람쥐이름이이렇게님의 나무</Title>
+            <Under>
+              <SquirrelImage src="/source/squirrel/1.png" alt="Squirrel" />
+              <RightSection>
+                <AcornText>추억 도토리가 25개 쌓이는 중이에요!</AcornText>
+                <GiftButton>도토리 선물하기</GiftButton>
+              </RightSection>
+            </Under>
+          </BottomSection>
+        </Content>
       </BackgroundWrapper>
-      <Content>
-        <LockImagesWrapper>
-          {[...Array(23)].map((_, index) => (
-            <LockImage
-              key={index}
-              src="/source/lock.png"
-              alt="Lock"
-              align={index % 2 === 0 ? 'left' : 'right'}
-            />
-          ))}
-        </LockImagesWrapper>
-        <BottomSection>
-          <Title>람쥐람쥐이름이이렇게님의 나무</Title>
-          <Under>
-            <SquirrelImage src="/source/squirrel/1.png" alt="Squirrel" />
-            <RightSection>
-              <AcornText>추억 도토리가 25개 쌓이는 중이에요!</AcornText>
-              <GiftButton>도토리 선물하기</GiftButton>
-            </RightSection>
-          </Under>
-        </BottomSection>
-      </Content>
     </Container>
   );
 };
@@ -60,44 +57,31 @@ const Container = styled.div`
   overflow-x: hidden;
   justify-content: center;
   align-items: center;
-
-   // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
-   @media (min-width: 440px) {
-    // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
-    width: 440px;
-  }
-
-  @media (max-width: 375px) {
-    // 화면너비가 375px 이하일 때 고정 // iphone 13 mini
-    width: 375px;
-  }
 `;
 
 const BackgroundWrapper = styled.div`
-  position: absolute;
-  top: 0;
   width: 100vw;
-  height: auto;
+  //min-height: 100vh;
+  margin-top: 470vh;
+  height: calc(100vw * 12.92); /* 317:4096 비율을 유지 */
+  background-image: url("/source/background.png");
+  background-size: cover; /* 화면에 맞게 전체 이미지 표시 */
+  background-repeat: no-repeat;
+  background-position: top center; /* 이미지의 위쪽을 기준으로 정렬 */
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   z-index: 0;
 
-  // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
   @media (min-width: 440px) {
-    // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
     width: 440px;
+    height: calc(440px * 12.92);
   }
 
   @media (max-width: 375px) {
-    // 화면너비가 375px 이하일 때 고정 // iphone 13 mini
     width: 375px;
+    height: calc(375px * 12.92);
   }
-`;
-
-const BackgroundImage = styled.img`
-  width: 100%;
-  height: auto;
 `;
 
 const Content = styled.div`
@@ -111,20 +95,19 @@ const Content = styled.div`
   height: 100%;
 `;
 
-
 const LockImagesWrapper = styled.div`
-  position: absolute;
-  top: 50vh; /* 화면 높이의 절반에서 시작 */
-  width: 100%;
+  width: 60%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8vh;
+  position: absolute;
+  top: 26.67%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
-  gap: 8vh; /* 자물쇠들 사이 간격을 화면 높이 기준으로 설정 */
 `;
 
 const LockImage = styled.img`
-  width: 8vw; /* 자물쇠 크기를 화면 너비 기준으로 설정 */
+  width: 8vw;
   height: auto;
   align-self: ${(props) => (props.align === 'left' ? 'flex-start' : 'flex-end')};
   margin-left: ${(props) => (props.align === 'left' ? '5vw' : '0')};
@@ -135,11 +118,9 @@ const BottomSection = styled.div`
   align-items: center;
   justify-content: space-between;
   position: absolute;
-  bottom: 0;
-  top: 325vw;
+  top: 80%; /* 배경 높이의 4/5 지점 */
   width: 90%;
-  //padding: 10px;
-  z-index: 1; /* 다른 요소 위로 오도록 설정 */
+  z-index: 1;
 `;
 
 const Title = styled.h1`
@@ -183,17 +164,4 @@ const GiftButton = styled.button`
   &:hover {
     background-color: #c78919;
   }
-`;
-const Nuts = styled.div`
-  position: absolute;
-  width: 50px; //크기 고정
-  height: 30px; //크기 고정
-  top: ${(props) => props.top}; /* 위치 조정을 위한 props */
-  left: ${(props) => props.left}; /* 위치 조정을 위한 props */
-  border: 2px solid black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  background-color: white;
 `;
