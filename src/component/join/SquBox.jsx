@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-const SquBox = () => {
+const SquBox = ({ setSelectedImg }) => {
   const squImgList = [
     "/source/Squ/astronautSqu.png",
     "/source/Squ/cauClothSqu.png",
@@ -16,7 +16,13 @@ const SquBox = () => {
     "/source/Squ/tubeSqu.png",
   ];
 
-  const [currentImg, setCurrentImg] = useState(4);
+  const [currentImg, setCurrentImg] = useState(0);
+
+  useEffect(() => {
+    const imagePath = squImgList[currentImg];
+    const imageName = imagePath.split("/").pop().replace(".png", "");
+    setSelectedImg(imageName);
+  }, [currentImg, setSelectedImg]);
 
   // 이전 이미지로 이동
   const goPrev = () => {
@@ -34,7 +40,7 @@ const SquBox = () => {
 
   return (
     <Container>
-      <Title>| STEP 1|</Title>
+      <Title>| STEP 2 |</Title>
       <Text>원하는 다람쥐를 선택해 주세요</Text>
       <SubContainer>
         <Arrow onClick={goPrev}>&lt;</Arrow>
@@ -55,20 +61,23 @@ const Container = styled.div`
   height: 55.9113%;
   border-radius: 7%;
   background-color: rgba(255, 255, 255, 0.85);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:3%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3%;
 `;
 
 const Title = styled.div`
   color: #823b09;
-  font-size: 24px;
-  font-weight: 200;
-  margin-top:4%;
+  font-size: 150%;
+  //font-weight: 200;
+  margin-top: 9%;
 `;
-const Text = styled.div``;
+const Text = styled.div`
+  font-weight: 300;
+  font-size: 110%;
+`;
 
 const SubContainer = styled.div`
   display: flex;
@@ -81,14 +90,15 @@ const SubContainer = styled.div`
 const Arrow = styled.div`
   cursor: pointer;
   color: #823b09;
-  font-size: 24px;
+  font-size: 30px;
   position: relative;
-  z-index: 1px;
+  z-index: 4px;
+  margin-bottom: 22%;
 `;
 const Img = styled.img`
   margin-bottom: -22.6%;
   position: relative;
-  z-index: 1px;
+  z-index: 0.2px;
 `;
 const ImgPlate = styled.img``;
 
@@ -96,6 +106,6 @@ const ImgBox = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  margin-left: -10%;
-  margin-right: -10%;
+  margin-left: -5%;
+  margin-right: -5%;
 `;
