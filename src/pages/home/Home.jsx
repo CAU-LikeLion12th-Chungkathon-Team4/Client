@@ -23,7 +23,7 @@ const Home = () => {
   return (
     <Container>
       <BackgroundWrapper>
-        <BackgroundImage src="/source/wholetree.png" alt="Background" />
+        <BackgroundImage src="/source/background.png" alt="Background" />
       </BackgroundWrapper>
       <Content>
         <LockImagesWrapper>
@@ -76,7 +76,7 @@ const Container = styled.div`
 const BackgroundWrapper = styled.div`
   position: absolute;
   top: 0;
-  width: 375px;
+  width: 100vw;
   height: auto;
   display: flex;
   justify-content: center;
@@ -107,6 +107,8 @@ const Content = styled.div`
   justify-content: center;
   position: relative;
   z-index: 1;
+  width: 100%;
+  height: 100%;
 `;
 
 
