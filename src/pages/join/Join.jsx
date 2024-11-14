@@ -107,4 +107,5 @@ const Title = styled.div`
   font-size: 44px;
   color: #823b09;
   font-family: "EF_jejudoldam";
+  margin-bottom:6%;
 `;
