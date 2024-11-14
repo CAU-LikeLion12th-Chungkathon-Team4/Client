@@ -4,6 +4,8 @@ import Home from './pages/home/Home';
 import Landing from './pages/landing/Landing';
 import Join from './pages/join/Join';
 import Font from './font/Font.js';
+import ModalTestPage from './component/ModalTestPage';
+import Mypage from './pages/mypage/Mypage';
 
 function App() {
   return (
@@ -13,6 +15,8 @@ function App() {
       <Route path = "/" element={<Landing/>}/>
       <Route path = "/home" element={<Home/>}/>
       <Route path = "/join" element={<Join/>}/>
+      <Route path = "/modaltest" element={<ModalTestPage/>}/>
+      <Route path = "/mypage" element={<Mypage/>}/>
     </Routes>
 
     </>
