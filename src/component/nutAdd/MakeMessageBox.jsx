@@ -2,16 +2,19 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DefaultButton from "../DefaultButton";
 
-const MakeMessageBox = ({ setSelectedNick }) => {
-  const [currentNick, setCurrentNick] = useState("");
+const MakeMessageBox = ({ setNick, setMessage }) => {
 
-  const handleChange = (e) => {
+  const handleChangeNick = (e) => {
     const newNick = e.target.value;
     if (newNick.length <= 10) {
-      setCurrentNick(newNick);
-      setSelectedNick(newNick);
-    } else {
-      alert("닉네임은 10글자 이내로만 설정 가능해요.");
+      setNick(newNick);
+    }
+  };
+
+  const handleChangeMessage = (e) => {
+    const newMessage = e.target.value;
+    if (newMessage.length <= 80) {
+      setMessage(newMessage);
     }
   };
 
@@ -29,7 +32,7 @@ const MakeMessageBox = ({ setSelectedNick }) => {
             maxLength={10}
             type="text"
             //value={currentNick}
-            //onChange={handleChange}
+            onChange={handleChangeNick}
             placeholder="EX) 너의짱친이다람쥐"
           />
         </NickBox>
@@ -38,8 +41,8 @@ const MakeMessageBox = ({ setSelectedNick }) => {
           <InputBox2
             maxLength={80}
             //value={currentNick}
-            //onChange={handleChange}
-            placeholder="이번 2024년도 너와 함께해서 무지 즐거웠어!! 내년에도 함께하자!!"
+            onChange={handleChangeMessage}
+            placeholder="올해도 너와 함께해서 너무 행복했어!! 우리 내년에도 함께하자!!"
           />
         </MessageBox>
         <SubTitleBox>

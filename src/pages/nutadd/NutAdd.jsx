@@ -7,16 +7,29 @@ import InputNick from "../../component/join/InputNick";
 import MakePhotoBox from "../../component/nutAdd/MakePhotoBox";
 import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
 import MakeQuiz from "../../component/nutAdd/MakeQuiz";
+import axios from "axios";
 
 const NutAdd = () => {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(1); // 스탭 관리
+  const [photos, setPhotos] = useState([]); // 사진 관리
+  const [nick, setNick] = useState("너의짱친이다람쥐"); // 닉네임 관리
+  const [message, setMessage] = useState("올해도 너와 함께해서 너무 행복했어!! 우리 내년에도 함께하자!!"); // 메세지 관리
 
+
+  // step 관리 함수
   const handleStep = () => {
-    setStep(step + 1);
+    if (photos.length == 0) {
+      alert("사진을 등록 해주세요!!");
+    } else {
+      setStep(step + 1);
+    }
   };
 
+  // 일단 임시 출력용 - 나중에 api연결 - 도토리 묶음 제출
   const handleSubmit = async () => {
-    console.log();
+    console.log(photos);
+    console.log(nick);
+    console.log(message);
   };
 
   return (
@@ -28,13 +41,13 @@ const NutAdd = () => {
         <Title>도토리 선물하기</Title>
         {step === 1 && (
           <>
-            <MakePhotoBox />
+            <MakePhotoBox setPhotos={setPhotos} photos={photos} />
             <DefaultButton buttonText="다음" buttonFunc={handleStep} />
           </>
         )}
         {step === 2 && (
           <>
-            <MakeMessageBox />
+            <MakeMessageBox setNick={setNick} setMessage={setMessage} />
             <DefaultButton buttonText="다음" buttonFunc={handleStep} />
           </>
         )}
