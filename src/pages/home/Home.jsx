@@ -20,6 +20,13 @@ const Home = () => {
 
   return (
     <Container>
+      <TopBar>
+        <Logo src="/source/logoWithName.png" alt="Logo" />
+        <DotoriSection>
+          <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
+          <DotoriCount>25</DotoriCount>
+        </DotoriSection>
+      </TopBar>
       <BackgroundWrapper>
         <Content>
           <LockImagesWrapper>
@@ -59,15 +66,50 @@ const Container = styled.div`
   align-items: center;
 `;
 
+// TopBar styles for the fixed top bar
+const TopBar = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 90%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  //background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+`;
+
+const Logo = styled.img`
+  height: 30px;
+`;
+
+const DotoriSection = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const DotoriImage = styled.img`
+  height: 20px;
+  margin-right: 5px;
+`;
+
+const DotoriCount = styled.span`
+  font-size: 16px;
+  color: #333;
+`;
+
+// Rest of your components
 const BackgroundWrapper = styled.div`
   width: 100vw;
-  //min-height: 100vh;
   margin-top: 470vh;
-  height: calc(100vw * 12.92); /* 317:4096 비율을 유지 */
+  height: calc(100vw * 12.92);
   background-image: url("/source/background.png");
-  background-size: cover; /* 화면에 맞게 전체 이미지 표시 */
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: top center; /* 이미지의 위쪽을 기준으로 정렬 */
+  background-position: top center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,13 +138,13 @@ const Content = styled.div`
 `;
 
 const LockImagesWrapper = styled.div`
-  width: 60%;
+  width: 52%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8vh;
+  gap: 16.1vh;
   position: absolute;
-  top: 26.67%; /* 배경 높이의 2/3 지점 */
+  top: 17%;
   z-index: 1;
 `;
 
@@ -118,7 +160,7 @@ const BottomSection = styled.div`
   align-items: center;
   justify-content: space-between;
   position: absolute;
-  top: 80%; /* 배경 높이의 4/5 지점 */
+  top: 93.5%;
   width: 90%;
   z-index: 1;
 `;
@@ -135,7 +177,7 @@ const Under = styled.div`
 `;
 
 const SquirrelImage = styled.img`
-  width: 80px;
+  width: 80%;
   height: auto;
   margin-right: 10px;
 `;
