@@ -4,18 +4,45 @@ import styled from "styled-components";
 import SquBox from "../../component/join/SquBox";
 import DefaultButton from "../../component/DefaultButton";
 import InputNick from "../../component/join/InputNick";
+import { useNavigate } from "react-router-dom";
+import IdPwBox from "../../component/join/IdPwBox";
+import { join } from "../../api/api_join";
 
 const Join = () => {
   const [selectedImg, setSelectedImg] = useState("/source/Squ/defaultSqu.png");
   const [selectedNick, setSelectedNick] = useState("도토리맛있다람쥐");
-  const [step, setStep] = useState(2);
+  const [selectedID, setSelectedID] = useState();
+  const [selectedPW, setSelectedPW] = useState();
+  const [isConfirmID, setIsConfirmID] = useState(false);
+  const [step, setStep] = useState(1);
+
+  const navigate = useNavigate();
 
   const handleStep = () => {
-    setStep(3);
+    if(!selectedID){
+      alert("아이디 입력해 주세요!!")
+    } else if(!isConfirmID){
+      alert("아이디 중복 검사 해주세요!!")
+    } else if (!selectedPW){
+      alert("비밀번호 입력해 주세요")
+    }else{
+      setStep(step+1);
+    }
   };
 
   const handleSubmit = async () => {
-    console.log(selectedImg, selectedNick);
+    try {
+      const response = await join(selectedID, selectedPW, selectedNick, selectedImg);
+      localStorage.setItem("accessToken",response.accessToken)
+      //console.log(response.accessToken);
+      alert("회원가입 완료되었습니다!! 나의 도토리 나무로 이동합니다!!")
+      if (response) {
+        navigate("/home");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.");
+    }
   };
 
   return (
@@ -25,12 +52,19 @@ const Join = () => {
       </BackgroundWrapper>
       <Content>
         <Title>회원가입</Title>
-        {step === 2 ? (
+        {step === 1 && (
+          <>
+            <IdPwBox setSelectedID={setSelectedID} setSelectedPW={setSelectedPW} setIsConfirmID={setIsConfirmID} />
+            <DefaultButton buttonText="다음" buttonFunc={handleStep} />
+          </>
+        )}
+        {step === 2 && (
           <>
             <SquBox setSelectedImg={setSelectedImg} />
             <DefaultButton buttonText="다음" buttonFunc={handleStep} />
           </>
-        ) : (
+        )}
+        {step === 3 &&(
           <>
             <InputNick setSelectedNick={setSelectedNick} />
             <DefaultButton buttonText="만나서 반갑다람쥐!" buttonFunc={handleSubmit}/>
