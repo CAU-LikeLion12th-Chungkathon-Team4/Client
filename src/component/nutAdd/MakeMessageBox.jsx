@@ -24,7 +24,7 @@ const MakeMessageBox = ({ setNick, setMessage }) => {
         <Title>| STEP 2 |</Title>
         <TextBox>
           <Text>닉네임과 함께 전하고 싶은</Text>
-          <Text>메서지를 입력해주세요. (80자 이내)</Text>
+          <Text>메서지를 입력해 주세요. (80자 이내)</Text>
         </TextBox>
         <NickBox>
           <SubText>닉네임</SubText>

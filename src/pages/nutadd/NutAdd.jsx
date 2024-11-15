@@ -8,13 +8,20 @@ import MakePhotoBox from "../../component/nutAdd/MakePhotoBox";
 import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
 import MakeQuiz from "../../component/nutAdd/MakeQuiz";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import ConfirmNutAdd from "../../component/nutAdd/ConfirmNutAdd";
 
 const NutAdd = () => {
   const [step, setStep] = useState(1); // 스탭 관리
   const [photos, setPhotos] = useState([]); // 사진 관리
   const [nick, setNick] = useState("너의짱친이다람쥐"); // 닉네임 관리
-  const [message, setMessage] = useState("올해도 너와 함께해서 너무 행복했어!! 우리 내년에도 함께하자!!"); // 메세지 관리
+  const [message, setMessage] = useState(
+    "올해도 너와 함께해서 너무 행복했어!! 우리 내년에도 함께하자!!"
+  ); // 메세지 관리
+  const [quizText, setQuizText] = useState(""); // 퀴즈 텍스트
+  const [quizAns, setQuizAns] = useState(true); // 퀴즈 정답
 
+  const navigate = useNavigate();
 
   // step 관리 함수
   const handleStep = () => {
@@ -27,10 +34,30 @@ const NutAdd = () => {
 
   // 일단 임시 출력용 - 나중에 api연결 - 도토리 묶음 제출
   const handleSubmit = async () => {
+    if (!quizText) {
+      alert("퀴즈를 만들어 주세요!!");
+    } else {
+      // api 보내기 로직
+      alert("등록되었습니다!!");
+    }
     console.log(photos);
     console.log(nick);
     console.log(message);
+    console.log(quizText);
+    console.log(quizAns);
+
+    if (localStorage.getItem("userID")) {
+      // 홈 화면으로 이동
+      navigate("/home");
+    } else {
+      // 선물하기 플로우 마지막 화면 렌더링
+      setStep(step + 1);
+    }
   };
+
+  const goJoin = ()=>{
+    navigate("/join")
+  }
 
   return (
     <Container>
@@ -53,8 +80,13 @@ const NutAdd = () => {
         )}
         {step === 3 && (
           <>
-            <MakeQuiz />
+            <MakeQuiz setQuizAns={setQuizAns} setQuizText={setQuizText} />
             <DefaultButton buttonText="마치기" buttonFunc={handleSubmit} />
+          </>
+        )}
+        {step === 4 && (
+          <>
+            <ConfirmNutAdd goJoin={goJoin}/>
           </>
         )}
       </Content>

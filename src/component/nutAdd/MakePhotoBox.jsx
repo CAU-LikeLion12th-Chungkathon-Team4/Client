@@ -58,7 +58,7 @@ const MakePhotoBox = ({ setPhotos, photos }) => {
     <Outer>
       <Container>
         <Title>| STEP 1 |</Title>
-        <Text>사진을 업로드 해주세요</Text>
+        <Text>사진을 업로드해 주세요</Text>
         <SubContainer>
           <Arrow onClick={goPrev}>&lt;</Arrow>
           {preview ? (
