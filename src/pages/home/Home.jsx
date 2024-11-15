@@ -1,5 +1,21 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+
+const dummy = {
+  email: 'kimdaram@daram.com',
+  nickname: '김다람',
+  profile: 'source/daram1.png',
+  nutCount: '25',
+  identifyUser: 0,
+};
+
+// 임시 데이터 배열
+const dummyData = Array.from({ length: 21 }, (_, index) => ({
+  id: index,
+  isLock: index % 2 === 0, // 짝수는 잠김, 홀수는 잠기지 않음
+  sender: '친구친구친구',
+}));
 
 const Home = () => {
   const [scrollControl, setScrollControl] = useState(0);
@@ -18,36 +34,52 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, []);
 
+    // 이미지 클릭 핸들러
+    const handleImageClick = (isLock, id) => {
+      if (isLock) {
+        //navigate(`/photo/${id}`);
+      } else {
+        //navigate(`/quiz/${id}`);
+      }
+    };
+
   return (
     <Container>
       <TopBar>
         <Logo src="/source/logoWithName.png" alt="Logo" />
         <DotoriSection>
           <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
-          <DotoriCount>25</DotoriCount>
+          <DotoriCount>{dummy.nutCount}</DotoriCount>
         </DotoriSection>
       </TopBar>
       <BackgroundWrapper>
         <Content>
-          <LockImagesWrapper>
-            {[...Array(23)].map((_, index) => (
-              <LockImage
-                key={index}
-                src="/source/lock.png"
-                alt="Lock"
-                align={index % 2 === 0 ? 'left' : 'right'}
-              />
+        <LockImagesWrapper>
+          {dummyData
+            .slice() // 원본 배열 수정 방지
+            .reverse() // 배열 순서 뒤집기
+            .map(({ id, isLock, sender }) => (
+              <LockItem key={id} align={id % 2 === 0 ? "left" : "right"}>
+                <LockImage
+                  src={isLock ? "/source/dotoriPocket.png" : "/source/lock.png"}
+                  alt={isLock ? "Nut" : "Lock"}
+                  onClick={() => handleImageClick(isLock, id)}
+                />
+                <SenderName>{sender}</SenderName>
+              </LockItem>
             ))}
-          </LockImagesWrapper>
+        </LockImagesWrapper>
           <BottomSection>
-            <Title>람쥐람쥐이름이이렇게님의 나무</Title>
-            <Under>
-              <SquirrelImage src="/source/squirrel/1.png" alt="Squirrel" />
+            <Title><span>{dummy.nickname}</span> 님의 나무</Title>
+            <BoxWrapper>
+              <SquirrelImage src="/source/squirrel/2.png" alt="Squirrel" />
               <RightSection>
-                <AcornText>추억 도토리가 25개 쌓이는 중이에요!</AcornText>
-                <GiftButton>도토리 선물하기</GiftButton>
+                <AcornText>추억 도토리가 <span>{dummy.nutCount}</span>개<br />쌓이는 중이에요!</AcornText>
+                <GiftButton>
+                  {dummy.identifyUser === 0 ? "도토리 선물하기" : "도토리 요청하기"}
+                </GiftButton>
               </RightSection>
-            </Under>
+            </BoxWrapper>
           </BottomSection>
         </Content>
       </BackgroundWrapper>
@@ -57,6 +89,7 @@ const Home = () => {
 
 export default Home;
 
+// Styled Components
 const Container = styled.div`
   width: 100vw;
   display: flex;
@@ -66,18 +99,16 @@ const Container = styled.div`
   align-items: center;
 `;
 
-// TopBar styles for the fixed top bar
 const TopBar = styled.div`
   position: fixed;
   top: 0;
   left: 0;
-  width: 90%;
+  width: 100%;
   height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
-  //background-color: #ffffff;
+  margin-left: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
 `;
@@ -89,6 +120,7 @@ const Logo = styled.img`
 const DotoriSection = styled.div`
   display: flex;
   align-items: center;
+  padding-right: 40px;
 `;
 
 const DotoriImage = styled.img`
@@ -101,12 +133,11 @@ const DotoriCount = styled.span`
   color: #333;
 `;
 
-// Rest of your components
 const BackgroundWrapper = styled.div`
   width: 100vw;
   margin-top: 470vh;
   height: calc(100vw * 12.92);
-  background-image: url("/source/background.png");
+  background-image: url("/source/fullTree.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: top center;
@@ -138,72 +169,112 @@ const Content = styled.div`
 `;
 
 const LockImagesWrapper = styled.div`
-  width: 52%;
+  width: 56%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16.1vh;
+  gap: 7.1vh;
   position: absolute;
-  top: 17%;
+  bottom: 6.5%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
 `;
 
+const LockItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props) => (props.align === "left" ? "flex-start" : "flex-end")};
+  width: 100%;
+  margin-left: ${(props) => (props.align === "left" ? "5vw" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "5vw" : "0")};
+`;
+
 const LockImage = styled.img`
-  width: 8vw;
+  width: 20vw;
   height: auto;
-  align-self: ${(props) => (props.align === 'left' ? 'flex-start' : 'flex-end')};
-  margin-left: ${(props) => (props.align === 'left' ? '5vw' : '0')};
-  margin-right: ${(props) => (props.align === 'right' ? '5vw' : '0')};
+  cursor: pointer;
+`;
+
+const SenderName = styled.span`
+  font-size: 18px;
+  margin-top: 8px;
+  color: white;
+  text-align: center;
+  word-break: break-word;
 `;
 
 const BottomSection = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   position: absolute;
-  top: 93.5%;
-  width: 90%;
+  top: 93.2%;
+  width: 80%;
   z-index: 1;
 `;
 
 const Title = styled.h1`
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
-  color: #4a4a4a;
+  color: black;
+  white-space: nowrap;
+  text-align: right;
   margin-bottom: 10px;
+  align-self: flex-end;
+  margin-right: -5%;
+  span {
+    color: #823B09; /* 강조 부분 색상 */
+  }
 `;
 
-const Under = styled.div`
+const BoxWrapper = styled.div`
   display: flex;
+  align-items: center;
+  //justify-content: center;
+  margin-right: 10%;
+  width: 100%;
 `;
 
 const SquirrelImage = styled.img`
-  width: 80%;
+  width: 90%;
   height: auto;
-  margin-right: 10px;
+  //margin-right: 10px;
+  margin-left: -10%;
 `;
 
 const RightSection = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
 `;
 
 const AcornText = styled.p`
-  font-size: 14px;
-  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  color: black;
   margin: 0;
-  margin-bottom: 8px;
+  margin-bottom: 30%;
+  margin-right: 20%;
+  line-height: 26px;
+  white-space: nowrap;
+  span {
+    color: #823B09; /* 강조 부분 색상 */
+  }
 `;
 
 const GiftButton = styled.button`
-  font-size: 14px;
+  font-size: 18px;
   color: white;
-  background-color: #f9a825;
+  background-color: #823B09;
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  margin-right: 20%;
+  margin-bottom: 110%;
+  padding: 12% 25%;
+  border-radius: 10px;
+  white-space: nowrap;
   cursor: pointer;
+  font-family: inherit;
   &:hover {
-    background-color: #c78919;
+    background-color: #5d2b06;
   }
 `;
