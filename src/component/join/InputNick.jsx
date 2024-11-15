@@ -66,7 +66,7 @@ const Text = styled.div`
 const InputBox = styled.input`
   width: 60.53%;
   height: 23.28%;
-  font-size: 120%;
+  font-size: 110%;
   padding-left: 4%;
   border-radius: 10px;
   text-align: left;

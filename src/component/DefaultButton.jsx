@@ -18,4 +18,5 @@ const Button = styled.div`
   font-size: 18px;
   border-radius: 10px;
   margin-top: 4%;
+  cursor: pointer;
 `;
