@@ -12,18 +12,17 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
     color: "#737373",
   }); // 중복확인에 따른 텍스트와 색 관리
 
-
   // ID 유효성 검사
   const isValidID = (id) => {
     const idRegex = /^[a-zA-Z0-9]{1,12}$/; // 알파벳+숫자, 최대 12글자
     return idRegex.test(id);
   };
 
-
   // 아이디 새로 입력시 동작
   const handleChangeID = (e) => {
     const newID = e.target.value;
-    if (newID.length <= 12) {
+
+    if (newID.length <= 12 && isValidID(currentID)) {
       setCurrentID(newID);
       setSelectedID(newID);
       setIsConfirmID(false);
@@ -33,7 +32,11 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
         color: "#737373",
       });
     } else {
-      alert("아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.");
+      setCurrentID();
+      setSubText({
+        message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+        color: "#dc2626",
+      });
     }
   };
 
@@ -81,13 +84,6 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
         color: "#dc2626",
       });
     }
-    // 아이디 유효성 검사
-    if (isValidID(!currentID)){
-      setSubText({
-        message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
-        color: "#dc2626",
-      });
-    }
   };
 
   return (
@@ -113,7 +109,7 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
           placeholder="EX) ehxhfl99"
         />
         <SubText2>
-          비밀번호는 알벳+숫자+특수문자 12글자 이내로만 설정 가능해요.
+          비밀번호는 알파벳+숫자+특수문자 12글자 이내로만 설정 가능해요.
         </SubText2>
       </Container>
     </Outer>
