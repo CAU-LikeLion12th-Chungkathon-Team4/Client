@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+// 도토리 사진 추가 박스
+import React, { useState } from "react";
 import styled from "styled-components";
-import DefaultButton from "../DefaultButton";
-import axios from "axios";
 
 const MakePhotoBox = ({ setPhotos, photos }) => {
   const [preview, setPreview] = useState(null); // 미리보기

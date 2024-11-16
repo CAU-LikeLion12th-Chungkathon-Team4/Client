@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+// 도토리 메세지 전송 박스
+import React from "react";
 import styled from "styled-components";
-import DefaultButton from "../DefaultButton";
 
 const MakeMessageBox = ({ setNick, setMessage }) => {
 
+  // 닉네임 변화 감지
   const handleChangeNick = (e) => {
     const newNick = e.target.value;
     if (newNick.length <= 10) {
@@ -11,6 +12,7 @@ const MakeMessageBox = ({ setNick, setMessage }) => {
     }
   };
 
+  // 메세지 변화 감지
   const handleChangeMessage = (e) => {
     const newMessage = e.target.value;
     if (newMessage.length <= 80) {

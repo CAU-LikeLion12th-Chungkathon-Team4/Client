@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+// 도토리 추가 마지막 확인 창
+import React from "react";
 import styled from "styled-components";
-import DefaultButton from "../DefaultButton";
 
 const ConfirmNutAdd = ({ goJoin }) => {
   return (

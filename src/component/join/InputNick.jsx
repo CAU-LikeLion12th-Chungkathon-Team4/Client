@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+// 닉네임 설정 창
+import React, { useState } from "react";
 import styled from "styled-components";
-import DefaultButton from "../DefaultButton";
 
 const InputNick = ({ setSelectedNick }) => {
   const [currentNick, setCurrentNick] = useState("");
