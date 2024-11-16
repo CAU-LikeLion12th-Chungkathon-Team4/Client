@@ -1,13 +1,10 @@
 // 도토리 선물하기
 import React, { useState } from "react";
 import styled from "styled-components";
-import SquBox from "../../component/join/SquBox";
 import DefaultButton from "../../component/DefaultButton";
-import InputNick from "../../component/join/InputNick";
 import MakePhotoBox from "../../component/nutAdd/MakePhotoBox";
 import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
 import MakeQuiz from "../../component/nutAdd/MakeQuiz";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import ConfirmNutAdd from "../../component/nutAdd/ConfirmNutAdd";
 

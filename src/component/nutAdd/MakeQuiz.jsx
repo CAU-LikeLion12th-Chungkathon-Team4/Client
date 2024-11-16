@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+// 도토리 퀴즈 만들기
+
+import React, { useState } from "react";
 import styled from "styled-components";
-import DefaultButton from "../DefaultButton";
 
 const MakeQuiz = ({ setQuizAns, setQuizText }) => {
   const [curQuizAns, setCurQuizAns] = useState(undefined);

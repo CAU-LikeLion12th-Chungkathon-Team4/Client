@@ -1,18 +1,26 @@
-import React, { useEffect, useState } from "react";
+// 아이디 비밀번호 선택 창
+import React, { useState } from "react";
 import styled from "styled-components";
-import DefaultButton from "../DefaultButton";
 import { checkID } from "../../api/api_join";
 
 const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
-  const [currentID, setCurrentID] = useState();
-  const [currentPW, setCurrentPW] = useState();
-  const [currentConfirmID, setCurrentConfirmID] = useState(false);
-  const [isIDSame, setIsIDSame] = useState(false);
+  const [currentID, setCurrentID] = useState(); // 지금 입력된 id
+  const [currentPW, setCurrentPW] = useState(); // 지금 입력된 pw
+  const [currentConfirmID, setCurrentConfirmID] = useState(false); // 중복확인 버튼 눌렸는지 여부
   const [subText, setSubText] = useState({
     message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
-    color: "#737373"
-  });
+    color: "#737373",
+  }); // 중복확인에 따른 텍스트와 색 관리
 
+
+  // ID 유효성 검사
+  const isValidID = (id) => {
+    const idRegex = /^[a-zA-Z0-9]{1,12}$/; // 알파벳+숫자, 최대 12글자
+    return idRegex.test(id);
+  };
+
+
+  // 아이디 새로 입력시 동작
   const handleChangeID = (e) => {
     const newID = e.target.value;
     if (newID.length <= 12) {
@@ -22,51 +30,62 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
       setCurrentConfirmID(false);
       setSubText({
         message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
-        color: "#737373"
+        color: "#737373",
       });
     } else {
       alert("아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.");
     }
   };
+
+  // 비밀번호 새로 입력시 동작
   const handleChangePW = (e) => {
     const newPW = e.target.value;
     if (newPW.length <= 12) {
       setCurrentPW(newPW);
       setSelectedPW(newPW);
     } else {
-      alert("비밀번호는 알벳+숫자+특수문자 12글자 이내로만 설정 가능해요.");
+      alert("비밀번호는 알파벳+숫자+특수문자 12글자 이내로만 설정 가능해요.");
     }
   };
 
+  // 아이디 중복 확인 누를 때 동작
   const handleConfirmID = async () => {
+    // 아이디 공백 시
     if (!currentID) {
       alert("아이디를 입력해 주세요!!");
       return;
     }
-
+    // 중복 체크
     try {
       const response = await checkID(currentID);
       if (response.isExist) {
         setSubText({
           message: "중복된 아이디예요!!",
-          color: "#dc2626"
+          color: "#dc2626",
         });
         setIsConfirmID(false);
         setCurrentConfirmID(false);
       } else {
         setSubText({
-        message: "사용 가능한 아이디예요!",
-        color: "#737373"
-      });
+          message: "사용 가능한 아이디예요!",
+          color: "#737373",
+        });
         setIsConfirmID(true);
         setCurrentConfirmID(true);
       }
-      console.log(response)
+      //console.log(response);
     } catch (error) {
       console.error("중복 확인 에러:", error);
       setSubText({
         message: "중복 확인 중 에러가 발생했어요.",
-        color: "#dc2626"
+        color: "#dc2626",
+      });
+    }
+    // 아이디 유효성 검사
+    if (isValidID(!currentID)){
+      setSubText({
+        message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+        color: "#dc2626",
       });
     }
   };
