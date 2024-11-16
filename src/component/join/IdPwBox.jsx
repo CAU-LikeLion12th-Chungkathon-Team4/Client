@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import DefaultButton from "../DefaultButton";
+import { checkID } from "../../api/api_join";
 
 const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
   const [currentID, setCurrentID] = useState();
   const [currentPW, setCurrentPW] = useState();
   const [currentConfirmID, setCurrentConfirmID] = useState(false);
+  const [isIDSame, setIsIDSame] = useState(false);
+  const [subText, setSubText] = useState({
+    message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+    color: "#737373"
+  });
 
   const handleChangeID = (e) => {
     const newID = e.target.value;
@@ -14,8 +20,12 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
       setSelectedID(newID);
       setIsConfirmID(false);
       setCurrentConfirmID(false);
+      setSubText({
+        message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+        color: "#737373"
+      });
     } else {
-      alert("아이디는 12글자 이내로만 설정 가능해요.");
+      alert("아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.");
     }
   };
   const handleChangePW = (e) => {
@@ -24,19 +34,41 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
       setCurrentPW(newPW);
       setSelectedPW(newPW);
     } else {
-      alert("비밀번호는 12글자 이내로만 설정 가능해요.");
+      alert("비밀번호는 알벳+숫자+특수문자 12글자 이내로만 설정 가능해요.");
     }
   };
 
   const handleConfirmID = async () => {
-    //백 api로 확인
-    if(!currentID){
-        alert("아이디를 입력해 주세요!!")
-    }else{
+    if (!currentID) {
+      alert("아이디를 입력해 주세요!!");
+      return;
+    }
+
+    try {
+      const response = await checkID(currentID);
+      if (response.isExist) {
+        setSubText({
+          message: "중복된 아이디예요!!",
+          color: "#dc2626"
+        });
+        setIsConfirmID(false);
+        setCurrentConfirmID(false);
+      } else {
+        setSubText({
+        message: "사용 가능한 아이디예요!",
+        color: "#737373"
+      });
         setIsConfirmID(true);
         setCurrentConfirmID(true);
+      }
+      console.log(response)
+    } catch (error) {
+      console.error("중복 확인 에러:", error);
+      setSubText({
+        message: "중복 확인 중 에러가 발생했어요.",
+        color: "#dc2626"
+      });
     }
-    
   };
 
   return (
@@ -53,7 +85,7 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
           />
           <ConfirmButton onClick={handleConfirmID}>중복확인</ConfirmButton>
         </Line>
-        <SubText1>{currentConfirmID ? "사용 가능한 아이디에요!!" : "아이디는 12글자 이내로만 설정 가능해요."}</SubText1>
+        <SubText1 style={{ color: subText.color }}>{subText.message}</SubText1>
         <Text2>비밀번호를 입력해 주세요</Text2>
         <InputBox
           type="text"
@@ -61,7 +93,9 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
           onChange={handleChangePW}
           placeholder="EX) ehxhfl99"
         />
-        <SubText2>비밀번호는 12글자 이내로만 설정 가능해요.</SubText2>
+        <SubText2>
+          비밀번호는 알벳+숫자+특수문자 12글자 이내로만 설정 가능해요.
+        </SubText2>
       </Container>
     </Outer>
   );
@@ -141,14 +175,13 @@ const SubText2 = styled.div`
   color: #737373;
   width: 60.53%;
   margin-top: 1%;
-  margin-left:-3%;
+  margin-left: -3%;
 `;
 const SubText1 = styled.div`
   font-size: 70%;
-  color: #737373;
   width: 60.53%;
   margin-top: -6%;
-  margin-left:-3%;
+  margin-left: -3%;
 `;
 
 const ConfirmButton = styled.div`

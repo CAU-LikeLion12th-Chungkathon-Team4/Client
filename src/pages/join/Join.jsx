@@ -37,6 +37,7 @@ const Join = () => {
       //console.log(response.accessToken);
       alert("회원가입 완료되었습니다!! 나의 도토리 나무로 이동합니다!!")
       if (response) {
+        // 여기는 나중에 유저 고유 id 붙여서 url 이동해야함!!
         navigate("/home");
       }
     } catch (error) {
