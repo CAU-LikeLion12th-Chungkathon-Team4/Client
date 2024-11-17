@@ -1,10 +1,17 @@
-
-// Home.jsx
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { fetchDotoriCollection , fetchUserData } from "../../api/api_home.js";
 
 const Home = () => {
   const [scrollControl, setScrollControl] = useState(0);
+  const [dotoriData, setDotoriData] = useState([]);
+  const [userData, setUserData] = useState({
+    nickname: "사용자",
+    squirrelImage: "../../../source/squ/defaultSquLeft.png",
+    isOwner: false, // isOwner 초기값 추가
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo({
@@ -20,39 +27,109 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+    
+      const accessToken = localStorage.getItem("access"); // 로컬 스토리지에서 액세스 토큰 가져오기
+  
+      if (!accessToken) {
+        console.error("No access token found!");
+        return;
+      }
+      
+      try {
+        // 사용자 데이터 가져오기
+        const user = await fetchUserData(accessToken);
+        //const user = await fetchUserData(); // accessToken 전달하지 않음
+        setUserData(user);
+  
+        // 도토리 데이터 가져오기
+        const dotoriData = await fetchDotoriCollection(user.urlRnd); // 사용자 데이터에서 urlRnd 가져오기
+        setDotoriData(dotoriData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+
+  const handleImageClick = (isLock, id) => {
+    if (isLock) {
+      navigate(`/photo/${id}`);
+    } else {
+      navigate(`/quiz/${id}`);
+    }
+  };
+
+  const handleGiftButtonClick = () => {
+    if (userData.isOwner) {
+      navigate("/request"); // 도토리 요청 페이지로 이동
+    } else {
+      navigate("/gift"); // 도토리 선물하기 페이지로 이동
+    }
+  };
+
   return (
     <Container>
+      <TopBar>
+        <Logo src="/source/logoWithName.png" alt="Logo" />
+        <DotoriSection>
+          <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
+          <DotoriCount>{dotoriData.length}</DotoriCount>
+        </DotoriSection>
+      </TopBar>
       <BackgroundWrapper>
-        <BackgroundImage src="/source/background.png" alt="Background" />
+        <Content>
+          <LockImagesWrapper>
+            {dotoriData
+              .slice()
+              .reverse()
+              .map(({ dotori_collection_id, lock, sender }) => (
+                <LockItem
+                  key={dotori_collection_id}
+                  align={dotori_collection_id % 2 === 1 ? "left" : "right"}
+                >
+                  <LockImage
+                    src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
+                    alt={lock ? "Lock" : "Nut"}
+                    onClick={() => handleImageClick(lock, dotori_collection_id)}
+                  />
+                  <SenderName>{sender}</SenderName>
+                </LockItem>
+              ))}
+          </LockImagesWrapper>
+          <BottomSection>
+            <Title>
+              <span>{userData.nickname}</span> 님의 나무
+            </Title>
+            <BoxWrapper>
+              <SquirrelImage
+                src={userData.squirrelImage}
+                alt="Squirrel"
+              />
+              <RightSection>
+                <AcornText>
+                  추억 도토리가 <span>{dotoriData.length}</span>개
+                  <br />
+                  쌓이는 중이에요!
+                </AcornText>
+                <GiftButton onClick={handleGiftButtonClick}>
+                  {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
+                </GiftButton>
+              </RightSection>
+            </BoxWrapper>
+          </BottomSection>
+        </Content>
       </BackgroundWrapper>
-      <Content>
-        <LockImagesWrapper>
-          {[...Array(23)].map((_, index) => (
-            <LockImage
-              key={index}
-              src="/source/lock.png"
-              alt="Lock"
-              align={index % 2 === 0 ? 'left' : 'right'}
-            />
-          ))}
-        </LockImagesWrapper>
-        <BottomSection>
-          <Title>람쥐람쥐이름이이렇게님의 나무</Title>
-          <Under>
-            <SquirrelImage src="/source/squirrel/1.png" alt="Squirrel" />
-            <RightSection>
-              <AcornText>추억 도토리가 25개 쌓이는 중이에요!</AcornText>
-              <GiftButton>도토리 선물하기</GiftButton>
-            </RightSection>
-          </Under>
-        </BottomSection>
-      </Content>
     </Container>
   );
 };
 
 export default Home;
 
+// Styled Components
 const Container = styled.div`
   width: 100vw;
   display: flex;
@@ -60,44 +137,64 @@ const Container = styled.div`
   overflow-x: hidden;
   justify-content: center;
   align-items: center;
+`;
 
-   // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
-   @media (min-width: 440px) {
-    // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
-    width: 440px;
-  }
+const TopBar = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 20px;
+  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+`;
 
-  @media (max-width: 375px) {
-    // 화면너비가 375px 이하일 때 고정 // iphone 13 mini
-    width: 375px;
-  }
+const Logo = styled.img`
+  height: 30px;
+`;
+
+const DotoriSection = styled.div`
+  display: flex;
+  align-items: center;
+  padding-right: 40px;
+`;
+
+const DotoriImage = styled.img`
+  height: 20px;
+  margin-right: 5px;
+`;
+
+const DotoriCount = styled.span`
+  font-size: 16px;
+  color: #333;
 `;
 
 const BackgroundWrapper = styled.div`
-  position: absolute;
-  top: 0;
   width: 100vw;
-  height: auto;
+  margin-top: 470vh;
+  height: calc(100vw * 12.92);
+  background-image: url("/source/fullTree.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   z-index: 0;
 
-  // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
   @media (min-width: 440px) {
-    // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
     width: 440px;
+    height: calc(440px * 12.92);
   }
 
   @media (max-width: 375px) {
-    // 화면너비가 375px 이하일 때 고정 // iphone 13 mini
     width: 375px;
+    height: calc(375px * 12.92);
   }
-`;
-
-const BackgroundImage = styled.img`
-  width: 100%;
-  height: auto;
 `;
 
 const Content = styled.div`
@@ -111,89 +208,113 @@ const Content = styled.div`
   height: 100%;
 `;
 
-
 const LockImagesWrapper = styled.div`
-  position: absolute;
-  top: 50vh; /* 화면 높이의 절반에서 시작 */
-  width: 100%;
+  width: 56%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 7.1vh;
+  position: absolute;
+  bottom: 6.5%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
-  gap: 8vh; /* 자물쇠들 사이 간격을 화면 높이 기준으로 설정 */
+`;
+
+const LockItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: ${(props) => (props.align === "left" ? "flex-start" : "flex-end")};
+  width: 100%;
+  margin-left: ${(props) => (props.align === "left" ? "5vw" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "5vw" : "0")};
 `;
 
 const LockImage = styled.img`
-  width: 8vw; /* 자물쇠 크기를 화면 너비 기준으로 설정 */
+  width: 20vw;
   height: auto;
-  align-self: ${(props) => (props.align === 'left' ? 'flex-start' : 'flex-end')};
-  margin-left: ${(props) => (props.align === 'left' ? '5vw' : '0')};
-  margin-right: ${(props) => (props.align === 'right' ? '5vw' : '0')};
+  cursor: pointer;
+`;
+
+const SenderName = styled.span`
+  font-size: 18px;
+  margin-top: 8px;
+  color: white;
+  text-align: center;
+  word-break: break-word;
 `;
 
 const BottomSection = styled.div`
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   position: absolute;
-  bottom: 0;
-  top: 325vw;
-  width: 90%;
-  //padding: 10px;
-  z-index: 1; /* 다른 요소 위로 오도록 설정 */
+  top: 93.2%;
+  width: 80%;
+  z-index: 1;
 `;
 
 const Title = styled.h1`
-  font-size: 18px;
+  font-size: 30px;
   font-weight: bold;
-  color: #4a4a4a;
+  color: black;
+  white-space: nowrap;
+  text-align: right;
   margin-bottom: 10px;
+  align-self: flex-end;
+  margin-right: -5%;
+  span {
+    color: #823B09; /* 강조 부분 색상 */
+  }
 `;
 
-const Under = styled.div`
+const BoxWrapper = styled.div`
   display: flex;
+  align-items: center;
+  //justify-content: center;
+  margin-right: 10%;
+  width: 100%;
 `;
 
 const SquirrelImage = styled.img`
-  width: 80px;
+  width: 90%;
   height: auto;
-  margin-right: 10px;
+  //margin-right: 10px;
+  margin-left: -10%;
 `;
 
 const RightSection = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
 `;
 
 const AcornText = styled.p`
-  font-size: 14px;
-  color: #333;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  color: black;
   margin: 0;
-  margin-bottom: 8px;
+  margin-bottom: 30%;
+  margin-right: 20%;
+  line-height: 26px;
+  white-space: nowrap;
+  span {
+    color: #823B09; /* 강조 부분 색상 */
+  }
 `;
 
 const GiftButton = styled.button`
-  font-size: 14px;
+  font-size: 18px;
   color: white;
-  background-color: #f9a825;
+  background-color: #823B09;
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  margin-right: 20%;
+  margin-bottom: 110%;
+  padding: 12% 25%;
+  border-radius: 10px;
+  white-space: nowrap;
   cursor: pointer;
+  font-family: inherit;
   &:hover {
-    background-color: #c78919;
+    background-color: #5d2b06;
   }
-`;
-const Nuts = styled.div`
-  position: absolute;
-  width: 50px; //크기 고정
-  height: 30px; //크기 고정
-  top: ${(props) => props.top}; /* 위치 조정을 위한 props */
-  left: ${(props) => props.left}; /* 위치 조정을 위한 props */
-  border: 2px solid black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  background-color: white;
 `;
