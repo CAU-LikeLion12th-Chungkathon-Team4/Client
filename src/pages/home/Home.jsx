@@ -50,8 +50,18 @@ const Home = () => {
           isOwner: user.urlRnd === urlRnd, // 공유된 urlRnd와 로그인 사용자 urlRnd 비교
         });
         // 도토리 데이터 가져오기
-        const dotoriData = await fetchDotoriCollection(urlRnd);
-        setDotoriData(dotoriData);
+        //const dotoriData = await fetchDotoriCollection(urlRnd);
+      // 도토리 데이터 가져오기 및 새로운 ID 추가
+      const rawDotoriData = await fetchDotoriCollection(urlRnd);
+
+      const updatedDotoriData = rawDotoriData.map((item, index) => ({
+        ...item,
+        custom_id: index, // 새로운 ID 추가
+      }));
+
+      setDotoriData(updatedDotoriData);
+
+          //setDotoriData(dotoriData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -87,14 +97,14 @@ const Home = () => {
       </TopBar>
       <BackgroundWrapper>
         <Content>
-          <LockImagesWrapper>
+        <LockImagesWrapper>
             {dotoriData
               .slice()
-              .reverse()
-              .map(({ dotori_collection_id, lock, sender }, index) => (
+              .reverse() // 데이터 순서 뒤집기
+              .map(({ dotori_collection_id, lock, sender }, custom_id) => (
                 <LockItem
                   key={dotori_collection_id}
-                  align={index% 2 === 0 ? "right" : "left"}
+                  align={custom_id % 2 === 0 ? "left" : "right"} // 첫 번째는 항상 왼쪽
                 >
                   <LockImage
                     src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
