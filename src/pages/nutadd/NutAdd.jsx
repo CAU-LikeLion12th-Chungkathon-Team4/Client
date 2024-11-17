@@ -5,7 +5,7 @@ import DefaultButton from "../../component/DefaultButton";
 import MakePhotoBox from "../../component/nutAdd/MakePhotoBox";
 import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
 import MakeQuiz from "../../component/nutAdd/MakeQuiz";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ConfirmNutAdd from "../../component/nutAdd/ConfirmNutAdd";
 import { nutAdd } from "../../api/api_nutAdd";
 
@@ -19,7 +19,10 @@ const NutAdd = () => {
   const [quizText, setQuizText] = useState(""); // 퀴즈 텍스트
   const [quizAns, setQuizAns] = useState(true); // 퀴즈 정답
 
+  const { urlRnd } = useParams(); // URL에서 urlRnd 가져오기
+
   const navigate = useNavigate();
+  
 
   // step 관리 함수
   const handleStep = () => {
@@ -37,6 +40,9 @@ const NutAdd = () => {
     } else {
       // api 보내기 로직
       try {
+        // 임시코드 - urlRnd 일단 로컬스토리지 저장된거 가져오기 - 나중에 url에서 가져와야 함
+        const testUrlRnd = localStorage.getItem("urlRnd");
+
         const requestJson = {
           sender: nick,
           message: message,
@@ -55,7 +61,7 @@ const NutAdd = () => {
           formData.append("files", file);
         });
 
-        const response = await nutAdd(formData, urlRnd);
+        const response = await nutAdd(formData, testUrlRnd); // 나중에 수정해야 할 로직
         console.log(response.data);
         alert("등록되었습니다!!");
       } catch (error) {
@@ -71,7 +77,7 @@ const NutAdd = () => {
 
     if (localStorage.getItem("userID")) {
       // 홈 화면으로 이동
-      navigate("/home");
+      //navigate("/home");
     } else {
       // 선물하기 플로우 마지막 화면 렌더링
       setStep(step + 1);

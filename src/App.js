@@ -18,7 +18,7 @@ function App() {
       <Route path = "/join" element={<Join/>}/>
       <Route path = "/modaltest" element={<ModalTestPage/>}/>
       <Route path = "/mypage" element={<Mypage/>}/>
-      <Route path = "/nutAdd" element={<NutAdd/>}/>
+      <Route path = "/gift" element={<NutAdd/>}/>
     </Routes>
 
     </>
