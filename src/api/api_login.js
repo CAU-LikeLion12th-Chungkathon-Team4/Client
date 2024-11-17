@@ -23,12 +23,13 @@ export const handleOAuth = async () => {
         // console.log(result.data)
 
         const result = await axios.post(`https://photori.n-e.kr/login?code=${code}`);
+        const { accessToken, refreshToken, urlRnd } = result.data;
         console.log(result.data)
   
         localStorage.setItem("access", result.data.access_token); // 받아온 액세스 토큰을 로컬스토리지에 저장하여 관리
         localStorage.setItem("refresh", result.data.refresh_token); // 받아온 리프레시 토큰을 로컬스토리지에 저장하여 관리
         
-        window.location.href = "/home";
+        window.location.href = "/home/${urlRnd}";
         
       } catch (error) {
         console.error("Error fetching OAuth data", error); // 에러 메세지 확인용

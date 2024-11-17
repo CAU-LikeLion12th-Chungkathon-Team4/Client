@@ -14,7 +14,7 @@ function App() {
     <Font/>
     <Routes>
       <Route path = "/" element={<Landing/>}/>
-      <Route path = "/home" element={<Home/>}/>
+      <Route path = "/home/:urlRnd" element={<Home/>}/>
       <Route path = "/join" element={<Join/>}/>
       <Route path = "/modaltest" element={<ModalTestPage/>}/>
       <Route path = "/mypage" element={<Mypage/>}/>
