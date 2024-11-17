@@ -3,10 +3,15 @@ import { useState } from 'react';
 import CorrectModal from './CorrectModal';
 import WrongModal from './WrongModal';
 import styled from 'styled-components';
-import Cancelbutton from './CancelButton';
+import CancelButton from './CancelButton';
 
   const QuizModal = () => {
     const [isCorrect, setIsCorrect] = useState(null);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+    const handleCancelDelete = () => {
+        setShowConfirmModal(false);
+      };
 
     const dummy = {
       username: '김다람',
@@ -28,7 +33,7 @@ import Cancelbutton from './CancelButton';
       {isCorrect === false && <WrongModal />}
       {isCorrect === null && (
         <Modal
-        ><Cancelbutton/>
+        ><CancelButton onClick={handleCancelDelete}/>
         <h1><p2>{dummy.username}</p2>님이 보낸 퀴즈</h1>
         <QuizBox><h2><p2>Q. </p2>{dummy.quiz}</h2></QuizBox>
         <ButtonContainer>
@@ -55,7 +60,7 @@ export default QuizModal
 const Modal = styled.div`
   display: flex;
   width: 327px;
-  height: 394px;
+  height: auto;
   padding: 4px 5px;
   justify-content: space-between;
   flex-direction: column;
@@ -138,6 +143,5 @@ button{
 }
 button:hover {
   background: rgb(121,63,25);
-  color: #FFF;
 }
 `;
