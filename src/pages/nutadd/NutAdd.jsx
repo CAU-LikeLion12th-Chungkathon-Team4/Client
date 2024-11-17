@@ -1,78 +1,60 @@
-//회원가입 페이지
+// 도토리 선물하기
 import React, { useState } from "react";
 import styled from "styled-components";
-import SquBox from "../../component/join/SquBox";
 import DefaultButton from "../../component/DefaultButton";
-import InputNick from "../../component/join/InputNick";
+import MakePhotoBox from "../../component/nutAdd/MakePhotoBox";
+import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
+import MakeQuiz from "../../component/nutAdd/MakeQuiz";
 import { useNavigate } from "react-router-dom";
-import IdPwBox from "../../component/join/IdPwBox";
-import { join } from "../../api/api_join";
+import ConfirmNutAdd from "../../component/nutAdd/ConfirmNutAdd";
 
-const Join = () => {
-  const [selectedImg, setSelectedImg] = useState("/source/Squ/defaultSqu.png"); // 선택된 다람쥐 사진
-  const [selectedNick, setSelectedNick] = useState("도토리맛있다람쥐"); // 선택 닉네임
-  const [selectedID, setSelectedID] = useState(); // 아이디
-  const [selectedPW, setSelectedPW] = useState(); // 비밀번호
-  const [isConfirmID, setIsConfirmID] = useState(false); // 중복확인 여부
-  const [step, setStep] = useState(1); // 다음 단계 넘어가기 위한 체크용
+const NutAdd = () => {
+  const [step, setStep] = useState(1); // 스탭 관리
+  const [photos, setPhotos] = useState([]); // 사진 관리
+  const [nick, setNick] = useState("너의짱친이다람쥐"); // 닉네임 관리
+  const [message, setMessage] = useState(
+    "올해도 너와 함께해서 너무 행복했어!! 우리 내년에도 함께하자!!"
+  ); // 메세지 관리
+  const [quizText, setQuizText] = useState(""); // 퀴즈 텍스트
+  const [quizAns, setQuizAns] = useState(true); // 퀴즈 정답
 
   const navigate = useNavigate();
 
-  // 아이디 유효성 검사
-  const isValidID = (id) => {
-    const idRegex = /^[a-zA-Z0-9]{1,12}$/; // 알파벳+숫자, 최대 12글자
-    //console.log(idRegex.test(id))
-    return idRegex.test(id);
-  };
-
-  // 비밀번호 유효성 검사
-  const isValidPW = (pw) => {
-    const pwRegex = /^[a-zA-Z\d!@#$%^&*]{1,12}$/; // 알파벳+숫자+특수문자
-    return pwRegex.test(pw);
-  };
-
-  // 다음 단계 넘어가는 버튼 누를 때 동작들
+  // step 관리 함수
   const handleStep = () => {
-    // 첫단계만 필수사항이라서 로직 추가
-    if (!selectedID) {
-      alert("아이디 입력해 주세요!!");
-    } else if (!isConfirmID) {
-      alert("아이디 중복 검사 해주세요!!");
-    } else if (!isValidID(selectedID)) {
-      alert("아이디는 알파벳+숫자 조합으로 12글자 이내로 설정해 주세요.");
-    } else if (!selectedPW) {
-      alert("비밀번호 입력해 주세요");
-    } else if (!isValidPW(selectedPW)) {
-      alert(
-        "비밀번호는 알파벳+숫자+특수문자 조합으로 12글자 이내로 설정해 주세요."
-      );
+    if (photos.length == 0) {
+      alert("사진을 등록 해주세요!!");
     } else {
       setStep(step + 1);
     }
   };
 
-  // 마지막 단계 버튼 누를 때 동작
+  // 일단 임시 출력용 - 나중에 api연결 - 도토리 묶음 제출
   const handleSubmit = async () => {
-    try {
-      const response = await join(
-        selectedID,
-        selectedPW,
-        selectedNick,
-        selectedImg
-      );
-      localStorage.setItem("accessToken", response.accessToken);
-      localStorage.setItem("userID", response.id);
-      //console.log(response.accessToken);
-      alert("회원가입 완료되었습니다!! 나의 도토리 나무로 이동합니다!!");
-      if (response) {
-        // 여기는 나중에 유저 고유 id 붙여서 url 이동해야함!!
-        navigate("/home");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("회원가입 중 문제가 발생했습니다. 다시 시도해 주세요.");
+    if (!quizText) {
+      alert("퀴즈를 만들어 주세요!!");
+    } else {
+      // api 보내기 로직
+      alert("등록되었습니다!!");
+    }
+    console.log(photos);
+    console.log(nick);
+    console.log(message);
+    console.log(quizText);
+    console.log(quizAns);
+
+    if (localStorage.getItem("userID")) {
+      // 홈 화면으로 이동
+      navigate("/home");
+    } else {
+      // 선물하기 플로우 마지막 화면 렌더링
+      setStep(step + 1);
     }
   };
+
+  const goJoin = ()=>{
+    navigate("/join")
+  }
 
   return (
     <Container>
@@ -80,31 +62,28 @@ const Join = () => {
         <BackgroundImage src="/source/joinBackground.png" alt="Background" />
       </BackgroundWrapper>
       <Content>
-        <Title>회원가입</Title>
-        {/* 현재 단계 추적하며 조건부 렌더링 */}
+        <Title>도토리 선물하기</Title>
         {step === 1 && (
           <>
-            <IdPwBox
-              setSelectedID={setSelectedID}
-              setSelectedPW={setSelectedPW}
-              setIsConfirmID={setIsConfirmID}
-            />
+            <MakePhotoBox setPhotos={setPhotos} photos={photos} />
             <DefaultButton buttonText="다음" buttonFunc={handleStep} />
           </>
         )}
         {step === 2 && (
           <>
-            <SquBox setSelectedImg={setSelectedImg} />
+            <MakeMessageBox setNick={setNick} setMessage={setMessage} />
             <DefaultButton buttonText="다음" buttonFunc={handleStep} />
           </>
         )}
         {step === 3 && (
           <>
-            <InputNick setSelectedNick={setSelectedNick} />
-            <DefaultButton
-              buttonText="만나서 반갑다람쥐!"
-              buttonFunc={handleSubmit}
-            />
+            <MakeQuiz setQuizAns={setQuizAns} setQuizText={setQuizText} />
+            <DefaultButton buttonText="마치기" buttonFunc={handleSubmit} />
+          </>
+        )}
+        {step === 4 && (
+          <>
+            <ConfirmNutAdd goJoin={goJoin}/>
           </>
         )}
       </Content>
@@ -112,7 +91,7 @@ const Join = () => {
   );
 };
 
-export default Join;
+export default NutAdd;
 
 const Container = styled.div`
   //미디어 쿼리 적용 - 여기가 최상단. 하위 컴포넌트는 여기 값을 기준으로 %단위로 지정해서 비율 유지 가능

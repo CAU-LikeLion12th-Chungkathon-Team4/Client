@@ -1,3 +1,5 @@
+// 다람쥐 설정 창
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
@@ -9,18 +11,19 @@ const SquBox = ({ setSelectedImg }) => {
     "/source/Squ/defaultSqu.png",
     "/source/Squ/luckSqu.png",
     "/source/Squ/programmerSqu.png",
-    "/source/Squ/puangSqu.png",
+    // "/source/Squ/puangSqu.png",
     "/source/Squ/santaSqu.png",
     "/source/Squ/sheepSqu.png",
     "/source/Squ/skrrSqu.png",
     "/source/Squ/tubeSqu.png",
   ];
 
-  const [currentImg, setCurrentImg] = useState(0);
+  const [currentImg, setCurrentImg] = useState(3);
 
+  // 이미지 렌더링
   useEffect(() => {
-    const imagePath = squImgList[currentImg];
-    const imageName = imagePath.split("/").pop().replace(".png", "");
+    const imagePath = squImgList[currentImg]; // 이미지 출력위해 경로 가져오기
+    const imageName = imagePath.split("/").pop().replace(".png", ""); // 백에 보내기 위해서 파싱
     setSelectedImg(imageName);
   }, [currentImg, setSelectedImg]);
 
