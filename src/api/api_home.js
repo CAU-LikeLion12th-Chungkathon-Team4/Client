@@ -4,7 +4,7 @@ import axios from "axios";
 const BASE_URL = "https://photori.n-e.kr";
 const USER_URL = `${BASE_URL}/user`;
 
-const TEMP_ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MzE4MDY2NjYsImV4cCI6MTczMTgwNjcyNiwidXNlcm5hbWUiOiJjaGVycnlubmlpaTIifQ.L97g9EFuAqYoQw4CkoE6-bMevqVx1jP1m8pjdlKOSb9KJEY5_-EYvlEJI2sQaulGOGW_3jGL5QOUF13B_n0gGg";
+const ACCESS_TOKEN = localStorage.getItem("access");
 
 export const fetchDotoriCollection = async (urlRnd) => {
   try {
@@ -21,7 +21,7 @@ export const fetchUserData = async (accessToken) => {
       const response = await axios.get(USER_URL, {
         headers: {
           //Authorization: `Bearer ${accessToken}`,
-          Authorization: `Bearer ${TEMP_ACCESS_TOKEN}`, // 하드코딩된 accessToken 사용
+          Authorization: `Bearer ${ACCESS_TOKEN}`, // 하드코딩된 accessToken 사용
         },
       });
   

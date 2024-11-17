@@ -9,7 +9,6 @@ const ModalTestPage = () => {
 
 return (
     <Container>
-      {/* 배경이미지 넣기 위한 rapper */}
       <BackgroundWrapper>
         {/* <BackgroundImage src="/source/testImg.png" alt="Background" /> */}
       </BackgroundWrapper>
@@ -37,6 +36,8 @@ export default ModalTestPage
 
 const Container = styled.div`
   display: 100%;
+  width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: bisque;
