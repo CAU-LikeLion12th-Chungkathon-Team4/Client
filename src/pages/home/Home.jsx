@@ -11,11 +11,38 @@ const dummy = {
 };
 
 // 임시 데이터 배열
-const dummyData = Array.from({ length: 21 }, (_, index) => ({
-  id: index,
-  isLock: index % 2 === 0, // 짝수는 잠김, 홀수는 잠기지 않음
-  sender: '친구친구친구',
-}));
+const dummyData = [
+  {
+    dotori_collection_id: 1,
+    sender: "청설모",
+    message: "안녕",
+    lock: false,
+    deleted: false,
+    dotori_num: 2,
+    createdAt: "2024-11-16T23:33:27.576688",
+    updatedAt: "2024-11-16T23:33:27.576688",
+  },
+  {
+    dotori_collection_id: 2,
+    sender: "청설모모",
+    message: "안녕",
+    lock: false,
+    deleted: false,
+    dotori_num: 2,
+    createdAt: "2024-11-16T23:51:10.831954",
+    updatedAt: "2024-11-16T23:51:10.831954",
+  },
+  {
+    dotori_collection_id: 3,
+    sender: "청설모모모모",
+    message: "안녕",
+    lock: true,
+    deleted: false,
+    dotori_num: 2,
+    createdAt: "2024-11-16T23:51:12.040657",
+    updatedAt: "2024-11-16T23:51:12.040657",
+  },
+];
 
 const Home = () => {
   const [scrollControl, setScrollControl] = useState(0);
@@ -49,32 +76,35 @@ const Home = () => {
         <Logo src="/source/logoWithName.png" alt="Logo" />
         <DotoriSection>
           <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
-          <DotoriCount>{dummy.nutCount}</DotoriCount>
+          <DotoriCount>{dummyData.length}</DotoriCount>
         </DotoriSection>
       </TopBar>
       <BackgroundWrapper>
         <Content>
         <LockImagesWrapper>
-          {dummyData
-            .slice() // 원본 배열 수정 방지
-            .reverse() // 배열 순서 뒤집기
-            .map(({ id, isLock, sender }) => (
-              <LockItem key={id} align={id % 2 === 0 ? "left" : "right"}>
-                <LockImage
-                  src={isLock ? "/source/dotoriPocket.png" : "/source/lock.png"}
-                  alt={isLock ? "Nut" : "Lock"}
-                  onClick={() => handleImageClick(isLock, id)}
-                />
-                <SenderName>{sender}</SenderName>
-              </LockItem>
-            ))}
-        </LockImagesWrapper>
+            {dummyData
+              .slice() // 원본 배열 수정 방지
+              .reverse() // 배열 순서 뒤집기
+              .map(({ dotori_collection_id, lock, sender }) => (
+                <LockItem
+                  key={dotori_collection_id}
+                  align={dotori_collection_id % 2 === 1 ? "left" : "right"}
+                >
+                  <LockImage
+                    src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
+                    alt={lock ? "Lock" : "Nut"}
+                    onClick={() => handleImageClick(lock, dotori_collection_id)}
+                  />
+                  <SenderName>{sender}</SenderName>
+                </LockItem>
+              ))}
+          </LockImagesWrapper>
           <BottomSection>
             <Title><span>{dummy.nickname}</span> 님의 나무</Title>
             <BoxWrapper>
-              <SquirrelImage src="/source/squirrel/2.png" alt="Squirrel" />
+              <SquirrelImage src="/source/squirrel/8.png" alt="Squirrel" />
               <RightSection>
-                <AcornText>추억 도토리가 <span>{dummy.nutCount}</span>개<br />쌓이는 중이에요!</AcornText>
+                <AcornText>추억 도토리가 <span>{dummyData.length}</span>개<br />쌓이는 중이에요!</AcornText>
                 <GiftButton>
                   {dummy.identifyUser === 0 ? "도토리 선물하기" : "도토리 요청하기"}
                 </GiftButton>
