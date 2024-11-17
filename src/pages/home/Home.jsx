@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { fetchDotoriCollection , fetchUserData } from "../../api/api_home.js";
 import QuizModal from "../../component/QuizModal.jsx";
+import Header from "../../component/Header.jsx";
 
 const Home = () => {
   const [scrollControl, setScrollControl] = useState(0);
@@ -75,13 +76,7 @@ const Home = () => {
 
   return (
     <Container>
-      <TopBar>
-        <Logo src="/source/logoWithName.png" alt="Logo" />
-        <DotoriSection>
-          <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
-          <DotoriCount>{dotoriData.length}</DotoriCount>
-        </DotoriSection>
-      </TopBar>
+      <Header />
       <BackgroundWrapper>
         <Content>
           <LockImagesWrapper>
@@ -144,40 +139,6 @@ const Container = styled.div`
   overflow-x: hidden;
   justify-content: center;
   align-items: center;
-`;
-
-const TopBar = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 50px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-left: 20px;
-  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-`;
-
-const Logo = styled.img`
-  height: 30px;
-`;
-
-const DotoriSection = styled.div`
-  display: flex;
-  align-items: center;
-  padding-right: 40px;
-`;
-
-const DotoriImage = styled.img`
-  height: 20px;
-  margin-right: 5px;
-`;
-
-const DotoriCount = styled.span`
-  font-size: 16px;
-  color: #333;
 `;
 
 const BackgroundWrapper = styled.div`
