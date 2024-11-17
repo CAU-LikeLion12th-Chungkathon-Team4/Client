@@ -26,7 +26,9 @@ const Login = () => {
       localStorage.setItem("refresh", result.refreshToken);
       localStorage.setItem("id", result.id);
       localStorage.setItem("urlRnd", result.urlRnd);
+
       router(`/home${localStorage.getItem("urlRnd")}`);
+
     } catch (error) {
       alert("아이디 또는 비밀번호가 잘못되었어요.");
     }
