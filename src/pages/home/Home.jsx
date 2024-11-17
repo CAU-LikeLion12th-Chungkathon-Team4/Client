@@ -55,12 +55,19 @@ const Home = () => {
         const user = await fetchUserData(urlRnd, accessToken);
         //const currentUrlRnd = window.location.pathname.split("/").pop(); // URL의 마지막 경로 가져오기
         //const isOwner = currentUrlRnd === user.urlRnd; // URL의 주인이 맞는지 확인
+        // 로컬 스토리지와 URL 비교
+        const localUrlRnd = localStorage.getItem("urlRnd");
 
-        //setUserData({ ...user, isOwner });
+        // isOwner 계산
+        const isOwner = localUrlRnd === urlRnd;
+        
+        setUserData({ ...user, isOwner });
+        /*
         setUserData({
           ...user,
           isOwner: user.urlRnd === urlRnd, // 공유된 urlRnd와 로그인 사용자 urlRnd 비교
         });
+        */
         // 도토리 데이터 가져오기
         //const dotoriData = await fetchDotoriCollection(urlRnd);
       // 도토리 데이터 가져오기 및 새로운 ID 추가
