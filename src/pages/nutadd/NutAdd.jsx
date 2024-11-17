@@ -7,6 +7,7 @@ import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
 import MakeQuiz from "../../component/nutAdd/MakeQuiz";
 import { useNavigate } from "react-router-dom";
 import ConfirmNutAdd from "../../component/nutAdd/ConfirmNutAdd";
+import { nutAdd } from "../../api/api_nutAdd";
 
 const NutAdd = () => {
   const [step, setStep] = useState(1); // 스탭 관리
@@ -35,7 +36,32 @@ const NutAdd = () => {
       alert("퀴즈를 만들어 주세요!!");
     } else {
       // api 보내기 로직
-      alert("등록되었습니다!!");
+      try {
+        const requestJson = {
+          sender: nick,
+          message: message,
+          quiz: {
+            question: quizText,
+            answer: quizAns,
+          },
+        };
+  
+        // FormData 생성
+        const formData = new FormData();
+        formData.append("requestJson", JSON.stringify(requestJson)); // JSON 문자열 추가
+  
+        // 사진 파일 추가
+        photos.forEach((file) => {
+          formData.append("files", file);
+        });
+
+        const response = await nutAdd(formData, urlRnd);
+        console.log(response.data);
+        alert("등록되었습니다!!");
+      } catch (error) {
+        console.error(error);
+        alert("도토리 보내기 중 에러가 발생했습니다. 다시 시도해 주세요.");
+      }
     }
     console.log(photos);
     console.log(nick);
@@ -52,9 +78,9 @@ const NutAdd = () => {
     }
   };
 
-  const goJoin = ()=>{
-    navigate("/join")
-  }
+  const goJoin = () => {
+    navigate("/join");
+  };
 
   return (
     <Container>
@@ -83,7 +109,7 @@ const NutAdd = () => {
         )}
         {step === 4 && (
           <>
-            <ConfirmNutAdd goJoin={goJoin}/>
+            <ConfirmNutAdd goJoin={goJoin} />
           </>
         )}
       </Content>
