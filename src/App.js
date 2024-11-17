@@ -19,7 +19,7 @@ function App() {
       <Route path = "/join" element={<Join/>}/>
       <Route path = "/login" element={<Login/>}/>
       <Route path = "/modaltest" element={<ModalTestPage/>}/>
-      <Route path = "/mypage" element={<Mypage/>}/>
+      <Route path = "/mypage/:urlRnd" element={<Mypage/>}/>
       <Route path = "/nutAdd" element={<NutAdd/>}/>
     </Routes>
 

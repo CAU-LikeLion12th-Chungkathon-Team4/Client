@@ -1,18 +1,74 @@
-import React from 'react'
 import styled from 'styled-components';
 import Header from '../../component/Header';
+import React, { useEffect, useState } from 'react'
+import{ fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
+import { useParams } from 'react-router-dom';
 
-const dummy = {
-    username: 'kimdaram@daram.com',
-    password: '1234',
-    nickname: '김다람',
-    profile: 'source/daram1.png'
-}
 const Mypage = () => {
+  const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
+  const [dotoriData, setDotoriData] = useState([]);
+
+  const [userData, setUserData] = useState({
+    username: "사용자",
+    password: "1234",
+    nickname: "사용자",
+    squirrelImage: "../../../source/squ/defaultSquLeft.png",
+    isOwner: false, // isOwner 초기값 추가
+    });
+
+    const dummy = {
+      username: "사용자",
+      password: "1234",
+    };
+
+useEffect(() => {
+  const fetchData = async () => {
+
+    const accessToken = localStorage.getItem("access"); // 로컬 스토리지에서 액세스 토큰 가져오기
+
+    if (!accessToken) {
+      console.error("No access token found!");
+      return;
+    }
+    
+    try {
+      // 사용자 데이터 가져오기
+      const user = await fetchUserData(urlRnd, accessToken);
+      //const currentUrlRnd = window.location.pathname.split("/").pop(); // URL의 마지막 경로 가져오기
+      //const isOwner = currentUrlRnd === user.urlRnd; // URL의 주인이 맞는지 확인
+      //setUserData({ ...user, isOwner });
+      setUserData({
+        ...user,
+        isOwner: user.urlRnd === urlRnd, // 공유된 urlRnd와 로그인 사용자 urlRnd 비교
+      });
+        // 도토리 데이터 가져오기
+        const dotoriData = await fetchDotoriCollection(urlRnd);
+        setDotoriData(dotoriData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+  };
+
+  fetchData();
+}, [urlRnd]);
   return (
     <Container>
+      <BackgroundWrapper>
         <BackgroundImage src="/source/mypage.png" alt="Background" />
-        <Header/>
+      </BackgroundWrapper>
+      <TopBar>
+        <Logo onClick={() => window.location.href = `/home/${localStorage.getItem("urlRnd")}`} src="/source/logoWithName.png" alt="Logo" />
+        <DotoriSection>
+          <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
+          <DotoriCount>{dotoriData.length}</DotoriCount>
+          <MypageBtn onClick={() => window.location.href = `/mypage/${localStorage.getItem("urlRnd")}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M16.6401 22H7.36009C6.34927 21.9633 5.40766 21.477 4.79244 20.6742C4.17722 19.8713 3.95266 18.8356 4.18009 17.85L4.42009 16.71C4.69613 15.1668 6.02272 14.0327 7.59009 14H16.4101C17.9775 14.0327 19.3041 15.1668 19.5801 16.71L19.8201 17.85C20.0475 18.8356 19.823 19.8713 19.2077 20.6742C18.5925 21.477 17.6509 21.9633 16.6401 22Z" fill="#823B09"/>
+              <path d="M12.5001 12H11.5001C9.29096 12 7.50009 10.2092 7.50009 8.00001V5.36001C7.49743 4.46807 7.85057 3.61189 8.48127 2.98119C9.11197 2.35049 9.96815 1.99735 10.8601 2.00001H13.1401C14.032 1.99735 14.8882 2.35049 15.5189 2.98119C16.1496 3.61189 16.5028 4.46807 16.5001 5.36001V8.00001C16.5001 9.06088 16.0787 10.0783 15.3285 10.8284C14.5784 11.5786 13.561 12 12.5001 12Z" fill="#823B09"/>
+            </svg>
+          </MypageBtn>
+        </DotoriSection>
+      </TopBar>
         <Content>
         <Title1>내 정보</Title1>
             <Title>아이디</Title>
@@ -20,8 +76,8 @@ const Mypage = () => {
             <Title>비밀번호</Title>
             <UserData>{dummy.password}</UserData>
             <Title>다람쥐 닉네임</Title>
-            <UserData>{dummy.nickname}</UserData>
-            <DaramImage src={dummy.profile} alt="Daram" />
+            <UserData>{userData.nickname}</UserData>
+            <DaramImage src={userData.squirrelImage} alt="Daram" />
         </Content>
     </Container>
   )
@@ -31,10 +87,13 @@ export default Mypage;
 
 
 const Container = styled.div`
+  //미디어 쿼리 적용 - 여기가 최상단. 하위 컴포넌트는 여기 값을 기준으로 %단위로 지정해서 비율 유지 가능
   width: 100vw;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  overflow-y: hidden;
   justify-content: center;
   align-items: center;
 
@@ -59,31 +118,90 @@ const Container = styled.div`
     height: 812px;
   }
 `;
+
+const BackgroundWrapper = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  //height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+
+  // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
+  @media (min-width: 440px) {
+    // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
+    width: 440px;
+  }
+
+  @media (max-width: 375px) {
+    // 화면너비가 375px 이하일 때 고정 // iphone 13 mini
+    width: 375px;
+  }
+
+  @media (min-height: 956px) {
+    // 화면높이가 956px 이상일 때 고정 // iphone 16 pro max
+    height: 956px;
+  }
+
+  @media (max-height: 812px) {
+    // 화면높이가 812px 이하일 때 고정 // iphone 13 mini
+    height: 812px;
+  }
+`;
+
+const BackgroundImage = styled.img`
+  width: 100%;
+  height: 100%;
+`;
+
+const Content = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  //height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  flex-direction: column;
+  //gap: 3%;
+
+  // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
+  @media (min-width: 440px) {
+    // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
+    width: 440px;
+  }
+
+  @media (max-width: 375px) {
+    // 화면너비가 375px 이하일 때 고정 // iphone 13 mini
+    width: 375px;
+  }
+
+  @media (min-height: 956px) {
+    // 화면높이가 956px 이상일 때 고정 // iphone 16 pro max
+    height: 956px;
+  }
+
+  @media (max-height: 812px) {
+    // 화면높이가 812px 이하일 때 고정 // iphone 13 mini
+    height: 812px;
+  }
+`;
+
 const Title1 = styled.div`
   font-size: 44px;
   color: #823b09;
   font-family: "EF_jejudoldam";
   margin-bottom: 3rem;
-`;
-
-const Content = styled.div`
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  position: absolute; /* Content를 절대 위치로 고정 */
-  bottom: 0; /* 화면 하단에 위치 */
-`;
-
-
-const BackgroundImage = styled.img`
-  width: 100%;
-  height: auto;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
+  margin-top: 7rem;
 `;
 
 const Title = styled.div`
@@ -119,10 +237,55 @@ const UserData = styled.div`
 `;
 
 const DaramImage = styled.img`
+  margin-top: 1rem;
   display: flex;
   width: 360px;
   height: 360px;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+`;
+
+const TopBar = styled.div`
+  top: 0;
+  position: ralative;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  //align-items: ;
+  margin-left: 20px;
+  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  //border: 1px solid black;
+  padding-top: 1rem;
+`;
+
+const Logo = styled.img`
+  height: 30px;
+  cursor: pointer;
+`;
+
+const DotoriSection = styled.div`
+  display: flex;
+  padding-right: 40px;
+`;
+
+const DotoriImage = styled.img`
+  height: 20px;
+  margin-right: 5px;
+  cursor: pointer;
+`;
+
+const DotoriCount = styled.span`
+  font-size: 16px;
+  color: #333;
+  margin-right: 20px;
+`;
+const MypageBtn = styled.button`
+background-color: transparent;
+border: none;
+display: flex;
+cursor: pointer;
 `;
