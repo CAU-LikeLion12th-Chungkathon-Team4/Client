@@ -2,9 +2,9 @@
 import axios from "axios";
 
 const BASE_URL = "https://photori.n-e.kr";
-const USER_URL = `${BASE_URL}/user`;
+const USER_URL = `${BASE_URL}/memeber`;
 
-const ACCESS_TOKEN = localStorage.getItem("access");
+const TEMP_ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3MzE4MDY2NjYsImV4cCI6MTczMTgwNjcyNiwidXNlcm5hbWUiOiJjaGVycnlubmlpaTIifQ.L97g9EFuAqYoQw4CkoE6-bMevqVx1jP1m8pjdlKOSb9KJEY5_-EYvlEJI2sQaulGOGW_3jGL5QOUF13B_n0gGg";
 
 export const fetchDotoriCollection = async (urlRnd) => {
   try {
@@ -16,12 +16,12 @@ export const fetchDotoriCollection = async (urlRnd) => {
   }
 };
 
-export const fetchUserData = async (accessToken) => {
+export const fetchUserData = async (urlRnd, accessToken) => {
     try {
-      const response = await axios.get(USER_URL, {
+      const response = await axios.get(`${BASE_URL}/${urlRnd}/member`, {
         headers: {
-          //Authorization: `Bearer ${accessToken}`,
-          Authorization: `Bearer ${ACCESS_TOKEN}`, // 하드코딩된 accessToken 사용
+          Authorization: `Bearer ${accessToken}`,
+          //Authorization: `Bearer ${TEMP_ACCESS_TOKEN}`, // 하드코딩된 accessToken 사용
         },
       });
   
@@ -32,6 +32,7 @@ export const fetchUserData = async (accessToken) => {
         nickname: userData.nickname,
         squirrelImage,
         urlRnd: userData.urlRnd, // urlRnd 추가
+        isOwner: userData.isOwner, // API 응답의 isOwner 값 추가
       };
     } catch (error) {
       console.error("Failed to fetch user data:", error);
