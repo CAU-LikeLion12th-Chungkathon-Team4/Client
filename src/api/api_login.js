@@ -8,6 +8,16 @@ export const loginHandler = async (username, password) => {
       username: username,
       password: password,
     });
+
+    const { accessToken, refreshToken, urlRnd } = response.data;
+
+        //토큰 저장
+        localStorage.setItem("access", accessToken);
+        localStorage.setItem("refresh", refreshToken);
+    
+        // 로그인 후 urlRnd 포함 페이지로 이동
+    window.location.href = `/home/${urlRnd}`;
+
     return response.data;
   } catch (error) {
     if (error.response) {
