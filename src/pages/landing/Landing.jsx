@@ -8,12 +8,14 @@ const Landing = () => {
   const gologin = () => {
     navigate('/login');
   } 
-  
+  const goPresent = () => {
+    navigate('/gift');
+  }
 return (
   <Container >
       <BackgroundImage src="/source/loginImg.png" alt="Background" />
       <LoginBtn onClick={gologin}>로그인</LoginBtn>
-      <PresentBtn>도토리 선물하기</PresentBtn>
+      <PresentBtn onClick={goPresent}>도토리 선물하기</PresentBtn>
   </Container>
 );
 };
