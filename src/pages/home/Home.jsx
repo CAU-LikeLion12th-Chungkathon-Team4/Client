@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
+import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
+import { useRecoilState } from 'recoil';
 
 const Home = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
@@ -13,7 +15,16 @@ const Home = () => {
     isOwner: false, // 초기값 설정
   });
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
+
+  const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
+
   const navigate = useNavigate();
+
+  // url에서 공유받은 링크의 yourUrlRnd 값 가져오기
+  useEffect(() => {
+    setYourUrlRndAtom(urlRnd);
+    console.log(yourUrlRndValue);
+  }, [yourUrlRndValue, setYourUrlRndAtom]);
 
   useEffect(() => {
     window.scrollTo({
@@ -93,9 +104,11 @@ const Home = () => {
           console.error("URL 복사 실패:", error);
         });
     } else {
-      navigate("/gift"); // 도토리 선물하기 페이지로 이동
+      navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
     }
   };
+
+  // 홈 화면 렌더링 될 때 리코일로 업데이트
 
   return (
     <Container>
