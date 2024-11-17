@@ -11,7 +11,7 @@ const SquBox = ({ setSelectedImg }) => {
     "/source/Squ/defaultSqu.png",
     "/source/Squ/luckSqu.png",
     "/source/Squ/programmerSqu.png",
-    "/source/Squ/puangSqu.png",
+    // "/source/Squ/puangSqu.png",
     "/source/Squ/santaSqu.png",
     "/source/Squ/sheepSqu.png",
     "/source/Squ/skrrSqu.png",
