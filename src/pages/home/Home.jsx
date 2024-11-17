@@ -12,7 +12,7 @@ const Home = () => {
   const [userData, setUserData] = useState({
     nickname: "사용자",
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
-    isOwner: false, // isOwner 초기값 추가
+    isOwner: false, // isOwner 초기값 추가 dkdkdkdkdk
   });
   const navigate = useNavigate();
 
