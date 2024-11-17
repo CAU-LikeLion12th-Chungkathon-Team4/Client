@@ -142,8 +142,6 @@ const Home = () => {
           <span>도토리를 수집</span>해 보세요!
         </ClipboardMessage>
       )}
-
-      <BackgroundWrapper>
         <Content>
         <LockImagesWrapper>
         {dotoriData
