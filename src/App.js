@@ -7,6 +7,7 @@ import Font from './font/Font.js';
 import ModalTestPage from './component/ModalTestPage';
 import Mypage from './pages/mypage/Mypage';
 import NutAdd from './pages/nutadd/NutAdd.jsx';
+import Login from './pages/login/Login.jsx';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
     <Font/>
     <Routes>
       <Route path = "/" element={<Landing/>}/>
+      <Route path = "/login" element={<Login/>}/>
       <Route path = "/home" element={<Home/>}/>
       <Route path = "/join" element={<Join/>}/>
       <Route path = "/modaltest" element={<ModalTestPage/>}/>
