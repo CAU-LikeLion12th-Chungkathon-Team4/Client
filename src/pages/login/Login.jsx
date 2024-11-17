@@ -2,6 +2,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { loginHandler } from "../../api/api_login";
+import { useRecoilValue } from "recoil";
+import { yourUrlRndAtom } from "../../recoil/urlRndAtom";
 
 const Login = () => {
   const [username, setUsername] = React.useState("");
@@ -24,7 +26,7 @@ const Login = () => {
       localStorage.setItem("refresh", result.refreshToken);
       localStorage.setItem("id", result.id);
       localStorage.setItem("urlRnd", result.urlRnd);
-      router("/home");
+      router(`/home${localStorage.getItem("urlRnd")}`);
     } catch (error) {
       alert("아이디 또는 비밀번호가 잘못되었어요.");
     }
