@@ -1,51 +1,17 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-
-const dummy = {
-  email: 'kimdaram@daram.com',
-  nickname: '김다람',
-  profile: 'source/daram1.png',
-  nutCount: '25',
-  identifyUser: 0,
-};
-
-// 임시 데이터 배열
-const dummyData = [
-  {
-    dotori_collection_id: 1,
-    sender: "청설모",
-    message: "안녕",
-    lock: false,
-    deleted: false,
-    dotori_num: 2,
-    createdAt: "2024-11-16T23:33:27.576688",
-    updatedAt: "2024-11-16T23:33:27.576688",
-  },
-  {
-    dotori_collection_id: 2,
-    sender: "청설모모",
-    message: "안녕",
-    lock: false,
-    deleted: false,
-    dotori_num: 2,
-    createdAt: "2024-11-16T23:51:10.831954",
-    updatedAt: "2024-11-16T23:51:10.831954",
-  },
-  {
-    dotori_collection_id: 3,
-    sender: "청설모모모모",
-    message: "안녕",
-    lock: true,
-    deleted: false,
-    dotori_num: 2,
-    createdAt: "2024-11-16T23:51:12.040657",
-    updatedAt: "2024-11-16T23:51:12.040657",
-  },
-];
+import { fetchDotoriCollection , fetchUserData } from "../../api/api_home.js";
 
 const Home = () => {
   const [scrollControl, setScrollControl] = useState(0);
+  const [dotoriData, setDotoriData] = useState([]);
+  const [userData, setUserData] = useState({
+    nickname: "사용자",
+    squirrelImage: "../../../source/squ/defaultSquLeft.png",
+    isOwner: false, // isOwner 초기값 추가
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo({
@@ -61,14 +27,49 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, []);
 
-    // 이미지 클릭 핸들러
-    const handleImageClick = (isLock, id) => {
-      if (isLock) {
-        //navigate(`/photo/${id}`);
-      } else {
-        //navigate(`/quiz/${id}`);
+  useEffect(() => {
+    const fetchData = async () => {
+    
+      const accessToken = localStorage.getItem("access"); // 로컬 스토리지에서 액세스 토큰 가져오기
+  
+      if (!accessToken) {
+        console.error("No access token found!");
+        return;
+      }
+      
+      try {
+        // 사용자 데이터 가져오기
+        const user = await fetchUserData(accessToken);
+        //const user = await fetchUserData(); // accessToken 전달하지 않음
+        setUserData(user);
+  
+        // 도토리 데이터 가져오기
+        const dotoriData = await fetchDotoriCollection(user.urlRnd); // 사용자 데이터에서 urlRnd 가져오기
+        setDotoriData(dotoriData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
+  
+    fetchData();
+  }, []);
+  
+
+  const handleImageClick = (isLock, id) => {
+    if (isLock) {
+      navigate(`/photo/${id}`);
+    } else {
+      navigate(`/quiz/${id}`);
+    }
+  };
+
+  const handleGiftButtonClick = () => {
+    if (userData.isOwner) {
+      navigate("/request"); // 도토리 요청 페이지로 이동
+    } else {
+      navigate("/gift"); // 도토리 선물하기 페이지로 이동
+    }
+  };
 
   return (
     <Container>
@@ -76,15 +77,15 @@ const Home = () => {
         <Logo src="/source/logoWithName.png" alt="Logo" />
         <DotoriSection>
           <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
-          <DotoriCount>{dummyData.length}</DotoriCount>
+          <DotoriCount>{dotoriData.length}</DotoriCount>
         </DotoriSection>
       </TopBar>
       <BackgroundWrapper>
         <Content>
-        <LockImagesWrapper>
-            {dummyData
-              .slice() // 원본 배열 수정 방지
-              .reverse() // 배열 순서 뒤집기
+          <LockImagesWrapper>
+            {dotoriData
+              .slice()
+              .reverse()
               .map(({ dotori_collection_id, lock, sender }) => (
                 <LockItem
                   key={dotori_collection_id}
@@ -100,13 +101,22 @@ const Home = () => {
               ))}
           </LockImagesWrapper>
           <BottomSection>
-            <Title><span>{dummy.nickname}</span> 님의 나무</Title>
+            <Title>
+              <span>{userData.nickname}</span> 님의 나무
+            </Title>
             <BoxWrapper>
-              <SquirrelImage src="/source/squirrel/8.png" alt="Squirrel" />
+              <SquirrelImage
+                src={userData.squirrelImage}
+                alt="Squirrel"
+              />
               <RightSection>
-                <AcornText>추억 도토리가 <span>{dummyData.length}</span>개<br />쌓이는 중이에요!</AcornText>
-                <GiftButton>
-                  {dummy.identifyUser === 0 ? "도토리 선물하기" : "도토리 요청하기"}
+                <AcornText>
+                  추억 도토리가 <span>{dotoriData.length}</span>개
+                  <br />
+                  쌓이는 중이에요!
+                </AcornText>
+                <GiftButton onClick={handleGiftButtonClick}>
+                  {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
                 </GiftButton>
               </RightSection>
             </BoxWrapper>
