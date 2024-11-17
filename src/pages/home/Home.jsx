@@ -12,6 +12,7 @@ const Home = () => {
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
     isOwner: false, // 초기값 설정
   });
+  const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,7 +54,6 @@ const Home = () => {
         //const dotoriData = await fetchDotoriCollection(urlRnd);
       // 도토리 데이터 가져오기 및 새로운 ID 추가
       const rawDotoriData = await fetchDotoriCollection(urlRnd);
-
       const updatedDotoriData = rawDotoriData.map((item, index) => ({
         ...item,
         custom_id: index, // 새로운 ID 추가
@@ -80,7 +80,18 @@ const Home = () => {
 
   const handleGiftButtonClick = () => {
     if (userData.isOwner) {
-      navigate("/request"); // 도토리 요청 페이지로 이동
+      // URL 복사 로직
+      const currentUrl = window.location.href;
+      navigator.clipboard.writeText(currentUrl)
+        .then(() => {
+          setShowClipboardMessage(true); // 복사 알림 메시지 표시
+          setTimeout(() => {
+            setShowClipboardMessage(false); // 일정 시간 후 메시지 숨기기
+          }, 3000); // 3초 동안 표시
+        })
+        .catch((error) => {
+          console.error("URL 복사 실패:", error);
+        });
     } else {
       navigate("/gift"); // 도토리 선물하기 페이지로 이동
     }
@@ -95,25 +106,34 @@ const Home = () => {
           <DotoriCount>{dotoriData.length}</DotoriCount>
         </DotoriSection>
       </TopBar>
+
+      {/* 복사 알림 메시지 */}
+      {showClipboardMessage && (
+        <ClipboardMessage>
+          클립보드에 복사되었습니다.<br /><br />
+          지금 친구들에게 <span>링크를 공유</span>해<br />
+          <span>도토리를 수집</span>해 보세요!
+        </ClipboardMessage>
+      )}
+
       <BackgroundWrapper>
         <Content>
         <LockImagesWrapper>
-            {dotoriData
-              .slice()
-              .reverse() // 데이터 순서 뒤집기
-              .map(({ dotori_collection_id, lock, sender }, custom_id) => (
-                <LockItem
-                  key={dotori_collection_id}
-                  align={custom_id % 2 === 0 ? "left" : "right"} // 첫 번째는 항상 왼쪽
-                >
-                  <LockImage
-                    src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
-                    alt={lock ? "Lock" : "Nut"}
-                    onClick={() => handleImageClick(lock, dotori_collection_id)}
-                  />
-                  <SenderName>{sender}</SenderName>
-                </LockItem>
-              ))}
+        {dotoriData
+          .map(({ custom_id, lock, sender }) => (
+            <LockItem
+              key={custom_id} // 새로운 ID 사용
+              align={(custom_id+1) % 2 === 1 ? "left" : "right"}
+            >
+              <LockImage
+                src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
+                alt={lock ? "Lock" : "Nut"}
+                onClick={() => handleImageClick(lock, custom_id)}
+              />
+              <SenderName>{sender}</SenderName>
+            </LockItem>
+          ))}
+
           </LockImagesWrapper>
           <BottomSection>
             <Title>
@@ -328,5 +348,26 @@ const GiftButton = styled.button`
   font-family: inherit;
   &:hover {
     background-color: #5d2b06;
+  }
+`;
+
+const ClipboardMessage = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.85); /* 흰색 배경, 투명도 85% */
+  color: black;
+  padding: 40px 40px; /* 위아래 30px, 양옆 40px */
+  border-radius: 10px;
+  text-align: center;
+  font-size: 18px; /* 글자 크기 증가 */
+  line-height: 1.6; /* 줄 간격 조정 */
+  z-index: 1000;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* 줄 바꿈 방지 */
+  span {
+    color: #823B09; /* 강조 부분 색상 */
+    font-weight: bold; /* 강조 텍스트 두껍게 */
   }
 `;
