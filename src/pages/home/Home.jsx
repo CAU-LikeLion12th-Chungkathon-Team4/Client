@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { fetchDotoriCollection , fetchUserData } from "../../api/api_home.js";
+import QuizModal from "../../component/QuizModal.jsx";
 
 const Home = () => {
   const [scrollControl, setScrollControl] = useState(0);
   const [dotoriData, setDotoriData] = useState([]);
+  const [quizmodalOpen, setquizModalOpen] = useState(false);
   const [userData, setUserData] = useState({
     nickname: "사용자",
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
@@ -94,7 +96,9 @@ const Home = () => {
                   <LockImage
                     src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
                     alt={lock ? "Lock" : "Nut"}
-                    onClick={() => handleImageClick(lock, dotori_collection_id)}
+                    onClick={() => setquizModalOpen(true)}
+                    className={'modal-open-btn'}
+                    
                   />
                   <SenderName>{sender}</SenderName>
                 </LockItem>
@@ -121,10 +125,13 @@ const Home = () => {
               </RightSection>
             </BoxWrapper>
           </BottomSection>
+          {
+    quizmodalOpen && (
+      <QuizModal setquizModalOpen={setquizModalOpen} /> ) }
         </Content>
       </BackgroundWrapper>
     </Container>
-  );
+  )
 };
 
 export default Home;

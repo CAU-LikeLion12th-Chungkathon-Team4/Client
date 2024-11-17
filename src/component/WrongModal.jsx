@@ -40,6 +40,11 @@ line-height: 150%; /* 30px */
 text-align: center;
 justify-content: center;
 }
+position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -60%);
+  z-index: 3;
 `;
 
 const TextBox = styled.div`
