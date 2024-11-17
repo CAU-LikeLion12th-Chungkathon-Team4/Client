@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { fetchDotoriCollection , fetchUserData } from "../../api/api_home.js";
-import QuizModal from "../../component/QuizModal.jsx";
-import Header from "../../component/Header.jsx";
+import { useNavigate, useParams } from "react-router-dom";
+import { fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
 
 const Home = () => {
+  const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
   const [scrollControl, setScrollControl] = useState(0);
   const [dotoriData, setDotoriData] = useState([]);
-  const [quizmodalOpen, setquizModalOpen] = useState(false);
   const [userData, setUserData] = useState({
     nickname: "사용자",
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
-    isOwner: false, // isOwner 초기값 추가 dkdkdkdkdk
+    isOwner: false, // 초기값 설정
   });
   const navigate = useNavigate();
 
@@ -32,31 +30,35 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-    
-      const accessToken = localStorage.getItem("access"); // 로컬 스토리지에서 액세스 토큰 가져오기
-  
+      const accessToken = localStorage.getItem("access");
+
       if (!accessToken) {
-        console.error("No access token found!");
+        navigate("/join");
+        //console.error("No access token found!");
         return;
       }
-      
+
       try {
         // 사용자 데이터 가져오기
-        const user = await fetchUserData(accessToken);
-        //const user = await fetchUserData(); // accessToken 전달하지 않음
-        setUserData(user);
-  
+        const user = await fetchUserData(urlRnd, accessToken);
+        //const currentUrlRnd = window.location.pathname.split("/").pop(); // URL의 마지막 경로 가져오기
+        //const isOwner = currentUrlRnd === user.urlRnd; // URL의 주인이 맞는지 확인
+
+        //setUserData({ ...user, isOwner });
+        setUserData({
+          ...user,
+          isOwner: user.urlRnd === urlRnd, // 공유된 urlRnd와 로그인 사용자 urlRnd 비교
+        });
         // 도토리 데이터 가져오기
-        const dotoriData = await fetchDotoriCollection(user.urlRnd); // 사용자 데이터에서 urlRnd 가져오기
+        const dotoriData = await fetchDotoriCollection(urlRnd);
         setDotoriData(dotoriData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-  
+
     fetchData();
-  }, []);
-  
+  }, [urlRnd, navigate]);
 
   const handleImageClick = (isLock, id) => {
     if (isLock) {
@@ -76,24 +78,28 @@ const Home = () => {
 
   return (
     <Container>
-      <Header />
+      <TopBar>
+        <Logo src="/source/logoWithName.png" alt="Logo" />
+        <DotoriSection>
+          <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
+          <DotoriCount>{dotoriData.length}</DotoriCount>
+        </DotoriSection>
+      </TopBar>
       <BackgroundWrapper>
         <Content>
           <LockImagesWrapper>
             {dotoriData
               .slice()
               .reverse()
-              .map(({ dotori_collection_id, lock, sender }) => (
+              .map(({ dotori_collection_id, lock, sender }, index) => (
                 <LockItem
                   key={dotori_collection_id}
-                  align={dotori_collection_id % 2 === 1 ? "left" : "right"}
+                  align={index% 2 === 0 ? "right" : "left"}
                 >
                   <LockImage
                     src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
                     alt={lock ? "Lock" : "Nut"}
-                    onClick={() => setquizModalOpen(true)}
-                    className={'modal-open-btn'}
-                    
+                    onClick={() => handleImageClick(lock, dotori_collection_id)}
                   />
                   <SenderName>{sender}</SenderName>
                 </LockItem>
@@ -104,10 +110,7 @@ const Home = () => {
               <span>{userData.nickname}</span> 님의 나무
             </Title>
             <BoxWrapper>
-              <SquirrelImage
-                src={userData.squirrelImage}
-                alt="Squirrel"
-              />
+              <SquirrelImage src={userData.squirrelImage} alt="Squirrel" />
               <RightSection>
                 <AcornText>
                   추억 도토리가 <span>{dotoriData.length}</span>개
@@ -120,13 +123,10 @@ const Home = () => {
               </RightSection>
             </BoxWrapper>
           </BottomSection>
-          {
-    quizmodalOpen && (
-      <QuizModal setquizModalOpen={setquizModalOpen} /> ) }
         </Content>
       </BackgroundWrapper>
     </Container>
-  )
+  );
 };
 
 export default Home;
@@ -139,6 +139,40 @@ const Container = styled.div`
   overflow-x: hidden;
   justify-content: center;
   align-items: center;
+`;
+
+const TopBar = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-left: 20px;
+  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+`;
+
+const Logo = styled.img`
+  height: 30px;
+`;
+
+const DotoriSection = styled.div`
+  display: flex;
+  align-items: center;
+  padding-right: 40px;
+`;
+
+const DotoriImage = styled.img`
+  height: 20px;
+  margin-right: 5px;
+`;
+
+const DotoriCount = styled.span`
+  font-size: 16px;
+  color: #333;
 `;
 
 const BackgroundWrapper = styled.div`
