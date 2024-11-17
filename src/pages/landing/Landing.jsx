@@ -23,15 +23,12 @@ return (
 export default Landing;
 
 const Container = styled.div`
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: column;
-  position: absolute;
-  top: 0;
-  height: 100%;
   justify-content: center;
   align-items: center;
-  z-index: 0;
+  
   // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
   @media (min-width: 440px) {
     // 화면너비가 440px 이상일 때 고정 // iphone 16 pro max
