@@ -281,18 +281,16 @@ const Content = styled.div`
   height: 100%;
 `;
 const TopBar = styled.div`
-  top: 2%;
+  top:2%;
   position: fixed;
   height: 50px;
-  width: 100%;
+  width: 85%; /* 기본적으로 화면 전체 너비 */
+  max-width: 380px; /* BackgroundWrapper의 최대 너비에 맞추기 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 15%;
-  margin-right: 5%;
-  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 2%;
   z-index: 10;
-  //border: 1px solid black;
 `;
 
 const Logo = styled.img`
@@ -302,30 +300,28 @@ const Logo = styled.img`
 const DotoriSection = styled.div`
   display: flex;
   align-items: center;
-  padding-right: 40px;
 `;
 
 const DotoriImage = styled.img`
   height: 20px;
-  margin-right: 5px;
+  margin-right: 10px;
 `;
 
 const DotoriCount = styled.span`
   font-size: 16px;
   color: #333;
-  margin-right: 20px;
+  margin-right: 30%;
 `;
 const MypageBtn = styled.button`
 background-color: transparent;
 border: none;
-display: flex;
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7.1vh;
+  gap: 6.8vh;
   position: absolute;
   bottom: 6.5%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
@@ -336,12 +332,13 @@ const LockItem = styled.div`
   flex-direction: column;
   align-items: ${(props) => (props.align === "left" ? "flex-start" : "flex-end")};
   width: 100%;
-  margin-left: ${(props) => (props.align === "left" ? "5vw" : "0")};
-  margin-right: ${(props) => (props.align === "right" ? "5vw" : "0")};
+  margin-left: ${(props) => (props.align === "left" ? "4.5vw" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "0" : "0")};
 `;
 
 const LockImage = styled.img`
   width: 20vw;
+  max-width: 100px; /* 너무 커지지 않도록 제한 */
   height: auto;
   cursor: pointer;
 `;
@@ -352,6 +349,8 @@ const SenderName = styled.span`
   color: white;
   text-align: center;
   word-break: break-word;
+  margin-left: 8%;
+  margin-right: 8%;
 `;
 
 const BottomSection = styled.div`
