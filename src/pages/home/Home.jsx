@@ -19,10 +19,31 @@ const Home = () => {
     isOwner: false, // 초기값 설정
   });
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
-
   const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const navigate = useNavigate();
+
+    // 스크롤 상태를 확인하는 함수
+    const checkScrollPosition = () => {
+      const isBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight;
+      setIsAtBottom(isBottom);
+    };
+
+      // 스크롤 이벤트 핸들러 등록
+  useEffect(() => {
+    window.addEventListener("scroll", checkScrollPosition);
+    return () => window.removeEventListener("scroll", checkScrollPosition);
+  }, []);
+
+  // 스크롤 아래로 이동
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  };
 
   // url에서 공유받은 링크의 yourUrlRnd 값 가져오기
   useEffect(() => {
@@ -191,6 +212,12 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
           <DotoriModal setdotoriModalOpen={setdotoriModalOpen} /> ) }
         </Content>
       </BackgroundWrapper>
+      <ScrollToBottomButton
+        src="../../../source/buttonForDown.png"
+        alt="Scroll to Bottom"
+        onClick={scrollToBottom}
+        isVisible={!isAtBottom} // 버튼 표시 여부 결정
+      />
     </Container>
   );
 };
@@ -205,6 +232,18 @@ const Container = styled.div`
   overflow-x: hidden;
   justify-content: center;
   align-items: center;
+  position: relative;
+`;
+
+const ScrollToBottomButton = styled.img`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  //display: ${({ isVisible }) => (isVisible ? "block" : "none")};
+  z-index: 1000;
 `;
 
 const BackgroundWrapper = styled.div`
