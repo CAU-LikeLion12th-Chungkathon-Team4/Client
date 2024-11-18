@@ -2,9 +2,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
+import CancelButton from './CancelButton';
   const DotoriModal = () => {
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(true);
     const navigate = useNavigate();
+
+    const closeModal = () => {
+      console.log('Modal is closing');  // 디버깅 로그
+      setIsModalOpen(false);
+    };
 
     const dummy = {
       username: '김다람',
@@ -29,9 +36,7 @@ import styled from 'styled-components'
 
         return (
           <Modal>
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="14" viewBox="0 0 15 14" fill="none">
-              <path d="M13.5 1L1.5 13M1.5 1L13.5 13" stroke="#737373" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+            <CancelButton onClick={closeModal} />
             <DeleteBtn onClick={handleDeleteClick}>
               <svg xmlns="http://www.w3.org/2000/svg" width="14" height="16" viewBox="0 0 14 16" fill="none">
                 <path d="M1 3.8H2.33333M2.33333 3.8H13M2.33333 3.8V13.6C2.33333 13.9713 2.47381 14.3274 2.72386 14.5899C2.97391 14.8525 3.31304 15 3.66667 15H10.3333C10.687 15 11.0261 14.8525 11.2761 14.5899C11.5262 14.3274 11.6667 13.9713 11.6667 13.6V3.8M4.33333 3.8V2.4C4.33333 2.0287 4.47381 1.6726 4.72386 1.41005C4.97391 1.1475 5.31304 1 5.66667 1H8.33333C8.68696 1 9.02609 1.1475 9.27614 1.41005C9.52619 1.6726 9.66667 2.0287 9.66667 2.4V3.8M5.66667 7.3V11.5M8.33333 7.3V11.5" stroke="#737373" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>

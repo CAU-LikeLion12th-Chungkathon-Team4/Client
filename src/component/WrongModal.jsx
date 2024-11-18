@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import CancelButton from './CancelButton';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
-const WrongModal = () => {
+const WrongModal = ({ onClose }) => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
   const [isOpen, setIsOpen] = useState(true);
@@ -36,11 +36,14 @@ const WrongModal = () => {
     }
   };
   return (
-        <Modal>
-          <CancelButton onClick={closeModal}/>
-          <TextBox>추억을 잠깐 잊으셨군요! ㅠㅠ<br/>친구에게 도토리를 다시 한 번<br/>요청할까요?</TextBox>
-          <Button onClick={handleGiftButtonClick}>도토리 요청하기</Button>
-        </Modal>
+    <>
+    {isOpen === true && (
+      <Modal>
+      <CancelButton onClick={closeModal}/>
+      <TextBox>추억을 잠깐 잊으셨군요! ㅠㅠ<br/>친구에게 도토리를 다시 한 번<br/>요청할까요?</TextBox>
+      <Button onClick={handleGiftButtonClick}>도토리 요청하기</Button>
+    </Modal>
+    )}</>
       )
 }
 

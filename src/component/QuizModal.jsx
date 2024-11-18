@@ -31,7 +31,7 @@ import CancelButton from './CancelButton';
       <>
       {isCorrect === true && <CorrectModal />}
       {isCorrect === false && <WrongModal />}
-      {isCorrect === null && (
+      {isOpen === true && (
         <Modal
         ><CancelButton onClick={closeModal} />
         <h1><p2>{DotoriData.username}</p2>님이 보낸 퀴즈</h1>
