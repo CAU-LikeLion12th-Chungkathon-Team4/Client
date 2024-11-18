@@ -103,7 +103,7 @@ const Modal = styled.div`
     text-align: center;
 
     /* text/head 2 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;

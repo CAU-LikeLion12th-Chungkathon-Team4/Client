@@ -109,8 +109,11 @@ const DotoriModal = ({ setdotoriModalOpen, clickedImgNum }) => {
   return (
     <Modal>
       <CancelButton onClick={closeModal} />
+      <h1>
+        <p2>{dotoriData.sender}</p2>님이 보낸 도토리
+      </h1>
       <DeleteBtn onClick={handleDeleteClick}>
-        <svg
+      <svg
           xmlns="http://www.w3.org/2000/svg"
           width="14"
           height="16"
@@ -126,9 +129,6 @@ const DotoriModal = ({ setdotoriModalOpen, clickedImgNum }) => {
           />
         </svg>
       </DeleteBtn>
-      <h1>
-        <p2>{dotoriData.sender}</p2>님이 보낸 도토리
-      </h1>
       <Line>
         <Arrow onClick={goPrev}>&lt;</Arrow>
         <Picture src={dotoriPicture[currentImg]?.photoUrl} />
@@ -184,7 +184,7 @@ const ConfirmModal = styled.div`
     text-align: center;
 
     /* text/body 1 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -196,7 +196,7 @@ const ConfirmModal = styled.div`
     color: var(--600, #dc2626);
 
     /* text/body 1 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -219,7 +219,7 @@ const ConfirmModal = styled.div`
     border: 2px solid var(--main, #823b09);
     background: var(--white, #fff);
     color: var(--main, #823b09);
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
@@ -228,17 +228,22 @@ const ConfirmModal = styled.div`
 `;
 
 const DeleteBtn = styled.div`
-  width: 12px;
-  height: 14px;
-  stroke-width: 1.5px;
-  stroke: var(--neutral-500, #737373);
+  width: 75%;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  margin-bottom: 5px;
 `;
 
 const Modal = styled.div`
   display: flex;
   width: 327px;
   height: auto;
-  padding: 4px 5px;
+  padding-top: 5px;
+  padding-bottom: 20px;
+  padding-right: 4px;
+  padding-left: 4px;
   justify-content: space-between;
   flex-direction: column;
   align-items: center;
@@ -254,9 +259,10 @@ const Modal = styled.div`
   h1 {
     color: #000;
     text-align: center;
-
+    margin-bottom: 10px;
+    margin-top: 10px;
     /* text/head 2 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -264,12 +270,13 @@ const Modal = styled.div`
   }
   p2 {
     color: var(--main, #823b09);
+    font-family: BMJUA;
   }
   h2 {
     color: #000;
 
     /* text/body 1 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -280,7 +287,7 @@ const Modal = styled.div`
     text-align: center;
 
     /* text/body 2 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 14px;
     font-style: normal;
     font-weight: 400;

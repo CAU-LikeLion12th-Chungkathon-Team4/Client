@@ -362,7 +362,7 @@ const handleGiftButtonClick = async (e) => {
                   <br />
                   쌓이는 중이에요!
                 </AcornText> 
-                <GiftButton onClick={clip} onTouchStart={clip}>
+                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
                   {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
                 </GiftButton>
               </RightSection>
@@ -460,7 +460,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 2%;
-  z-index: 10;
+  z-index: 1;
 `;
 
 const Logo = styled.img`

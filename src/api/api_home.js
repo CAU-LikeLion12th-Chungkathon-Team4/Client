@@ -29,6 +29,7 @@ export const fetchUserData = async (urlRnd, accessToken) => {
       const squirrelImage = `../../source/squ/${userData.squirrelType}Left.png`;
   
       return {
+        username: userData.username,
         nickname: userData.nickname,
         squirrelImage,
         urlRnd: userData.urlRnd, // urlRnd 추가
