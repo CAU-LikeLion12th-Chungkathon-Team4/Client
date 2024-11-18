@@ -18,12 +18,6 @@ const QuizModal = ({ setquizModalOpen, clickedImgNum }) => {
     setquizModalOpen(false);
   };
 
-  const DotoriData = {
-    username: "김다람",
-    quiz: "우리 팀의 중커톤 첫 회의 날짜는 11월 5일이다.",
-    answer: "O",
-  };
-
   const handleAnswer = async(userAnswer) => {
     const response = await replyQuiz(clickedImgNum, userAnswer)
     console.log(response.data)
