@@ -20,7 +20,7 @@ const QuizModal = ({ setquizModalOpen, clickedImgNum }) => {
 
   const handleAnswer = async(userAnswer) => {
     const response = await replyQuiz(clickedImgNum, userAnswer)
-    console.log(response.data)
+    //console.log(response.data)
     if (userAnswer === quizData.answer) {
       setIsCorrectModalOpen(true);
     } else {

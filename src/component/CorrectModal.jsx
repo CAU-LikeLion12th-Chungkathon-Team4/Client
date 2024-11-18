@@ -1,12 +1,16 @@
 import React from 'react'
 import styled from 'styled-components';
 import CancelButton from './CancelButton';
+import { useNavigate } from 'react-router-dom';
 
 const CorrectModal = ({ setquizModalOpen ,setIsCorrectModalOpen}) => {
+  const navigate = useNavigate();
 
   const handleCancel = () => {
     setquizModalOpen(false);
     setIsCorrectModalOpen(false);
+    window.location.reload();
+    
   };
 
   return (

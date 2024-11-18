@@ -27,7 +27,6 @@ export const getQuiz = async (dotori_collection_id) => {
 export const replyQuiz = async (dotori_collection_id, reply) => {
   try {
     const accessToken = localStorage.getItem("access");
-    console.log(accessToken)
     const response = await axios.put(
         `${baseUrl}/dotoricollection/${dotori_collection_id}/reply`,
         { reply }, // 요청 데이터
