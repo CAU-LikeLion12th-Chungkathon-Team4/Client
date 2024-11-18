@@ -23,8 +23,7 @@ function App() {
         <Route path="/mypage/:urlRnd" element={<Mypage />} />
         <Route path="/gift/:urlRnd" element={<NutAdd />} />
       </Routes>
-
-    </>
+    </RecoilRoot>
   );
 }
 
