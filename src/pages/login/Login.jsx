@@ -2,8 +2,8 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { loginHandler } from "../../api/api_login";
-import { useRecoilValue } from "recoil";
-import { yourUrlRndAtom } from "../../recoil/urlRndAtom";
+// import { useRecoilValue } from "recoil";
+// import { yourUrlRndAtom } from "../../recoil/urlRndAtom";
 
 const Login = () => {
   const [username, setUsername] = React.useState("");
