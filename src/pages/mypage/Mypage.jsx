@@ -291,7 +291,7 @@ const Logo = styled.img`
 
 const DotoriSection = styled.div`
   display: flex;
-  padding-right: 40px;
+  margin-right: 15px;
 `;
 
 const DotoriImage = styled.img`
