@@ -46,52 +46,49 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const accessToken = localStorage.getItem("access");
+        const accessToken = localStorage.getItem("access");
 
-      if (!accessToken) {
-        navigate("/join");
-        //console.error("No access token found!");
-        return;
-      }
+        if (!accessToken) {
+            navigate("/join");
+            return;
+        }
 
-      try {
-        // 사용자 데이터 가져오기
-        const user = await fetchUserData(urlRnd, accessToken);
-        //const currentUrlRnd = window.location.pathname.split("/").pop(); // URL의 마지막 경로 가져오기
-        //const isOwner = currentUrlRnd === user.urlRnd; // URL의 주인이 맞는지 확인
-        // 로컬 스토리지와 URL 비교
-        const localUrlRnd = localStorage.getItem("urlRnd");
+        try {
+            // 사용자 데이터 가져오기
+            const user = await fetchUserData(urlRnd, accessToken);
+            const localUrlRnd = localStorage.getItem("urlRnd");
+            const isOwner = localUrlRnd === urlRnd;
 
-        // isOwner 계산
-        const isOwner = localUrlRnd === urlRnd;
-        
-        setUserData({ ...user, isOwner });
-        /*
-        setUserData({
-          ...user,
-          isOwner: user.urlRnd === urlRnd, // 공유된 urlRnd와 로그인 사용자 urlRnd 비교
-        });
-        */
-        // 도토리 데이터 가져오기
-        //const dotoriData = await fetchDotoriCollection(urlRnd);
-      // 도토리 데이터 가져오기 및 새로운 ID 추가
-      const rawDotoriData = await fetchDotoriCollection(urlRnd);
-      const updatedDotoriData = rawDotoriData.map((item, index) => ({
-        ...item,
-        custom_id: index, // 새로운 ID 추가
-      }));
+            setUserData({ ...user, isOwner });
 
-      setDotoriData(updatedDotoriData);
+            // 도토리 데이터 가져오기
+            const rawDotoriData = await fetchDotoriCollection(urlRnd);
 
-          //setDotoriData(dotoriData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+            // createdAt 기준 정렬 후 custom_id 재할당
+            const sortedDotoriData = rawDotoriData
+                .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+                .map((item, index) => ({
+                    ...item,
+                    custom_id: index, // 정렬된 순서에 맞게 ID 재할당
+                }));
+
+            setDotoriData(sortedDotoriData);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     };
 
     fetchData();
-  }, [urlRnd, navigate]);
+}, [urlRnd, navigate]);
 
+// 이미지 클릭 핸들러 수정
+const handleImageClick = (isLock, dotoriCollectionId) => {
+  if (isLock) {
+    navigate(`/dotoricollection/${dotoriCollectionId}/quiz`);
+  } else {
+    navigate(`/${dotoriCollectionId}/open`);
+  }
+};
 
   const handleGiftButtonClick = () => {
     if (userData.isOwner) {
@@ -141,19 +138,22 @@ const Home = () => {
         <Content>
         <LockImagesWrapper>
         {dotoriData
-          .map(({ custom_id, lock, sender }) => (
+          .slice() // 원본 배열 복사
+          .reverse() // 배열 순서 뒤집기
+          .map(({ custom_id, dotori_collection_id, lock, sender }) => (
             <LockItem
-              key={custom_id} // 새로운 ID 사용
-              align={(custom_id+1) % 2 === 1 ? "left" : "right"}
+                key={custom_id}
+                align={custom_id % 2 === 0 ? "left" : "right"}
             >
-              <LockImage
-                src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
-                className={'modal-open-btn'}
-                onClick={() => lock ? setquizModalOpen(true) : setdotoriModalOpen(true)}
-                alt={lock ? "Lock" : "Nut"}
-              />
-              <SenderName>{sender}</SenderName>
+                <LockImage
+                    src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
+                    className={'modal-open-btn'}
+                    alt={lock ? "Lock" : "Nut"}
+                    onClick={() => lock ? setquizModalOpen(true) : setdotoriModalOpen(true)}
+                />
+                <SenderName>{sender}</SenderName>
             </LockItem>
+
           ))}
           </LockImagesWrapper>
           <BottomSection>
