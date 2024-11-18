@@ -478,7 +478,7 @@ const LockImagesWrapper = styled.div`
   }
 
   @media (max-width: 400px) { /* 모바일 화면 */
-    gap: 7vh;
+    gap: 7.7vh;
   }
 `;
 
