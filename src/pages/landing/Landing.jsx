@@ -8,9 +8,7 @@ const Landing = () => {
   const gologin = () => {
     navigate('/login');
   } 
-  const goPresent = () => {
-    navigate('/gift');
-  }
+
 return (
   <Container >
     <BackgroundWrapper>
@@ -18,7 +16,6 @@ return (
       </BackgroundWrapper>
       <Content>
       <LoginBtn onClick={gologin}>로그인</LoginBtn>
-      <PresentBtn onClick={goPresent}>도토리 선물하기</PresentBtn>
       </Content>
   </Container>
 );
@@ -135,7 +132,7 @@ const BackgroundImage = styled.img`
 `;
 
 const LoginBtn = styled.button`
-  width: 220px;
+  width: 230px;
   height: 45px;
   border-radius: 10px;
   padding: 10px;
@@ -143,26 +140,9 @@ const LoginBtn = styled.button`
   border: none;
   cursor: pointer;
   position: absolute;
-  bottom: 18.3%;
+  bottom: 17%;
   z-index: 1;
   color: #FFF;
-  font-size: 18px;
-  font-weight: 400;
-  font-family: BMJUA;
-`;
-
-const PresentBtn = styled.button`
-  width: 220px;
-  height: 45px;
-  border-radius: 10px;
-  padding: 10px;
-  border: 2px solid var(--main, #823B09);
-  background: #FEF4E8;
-  cursor: pointer;
-  position: absolute;
-  bottom: 12%;
-  z-index: 1;
-  color: var(--main, #823B09);
   font-size: 18px;
   font-weight: 400;
   font-family: BMJUA;

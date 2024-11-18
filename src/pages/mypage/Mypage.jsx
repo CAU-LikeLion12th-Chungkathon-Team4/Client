@@ -1,12 +1,13 @@
 import styled from 'styled-components';
-import Header from '../../component/Header';
 import React, { useEffect, useState } from 'react'
 import{ fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
 import { useParams } from 'react-router-dom';
+import LogoutModal from '../../component/LogoutModal.jsx';
 
 const Mypage = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
   const [dotoriData, setDotoriData] = useState([]);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const [userData, setUserData] = useState({
     username: "사용자",
@@ -61,20 +62,21 @@ useEffect(() => {
         <DotoriSection>
           <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
           <DotoriCount>{dotoriData.length}</DotoriCount>
-          <MypageBtn onClick={() => window.location.href = `/mypage/${localStorage.getItem("urlRnd")}`}>
+          <MypageBtn onClick={() => setShowLogoutModal(true)}>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M16.6401 22H7.36009C6.34927 21.9633 5.40766 21.477 4.79244 20.6742C4.17722 19.8713 3.95266 18.8356 4.18009 17.85L4.42009 16.71C4.69613 15.1668 6.02272 14.0327 7.59009 14H16.4101C17.9775 14.0327 19.3041 15.1668 19.5801 16.71L19.8201 17.85C20.0475 18.8356 19.823 19.8713 19.2077 20.6742C18.5925 21.477 17.6509 21.9633 16.6401 22Z" fill="#823B09"/>
               <path d="M12.5001 12H11.5001C9.29096 12 7.50009 10.2092 7.50009 8.00001V5.36001C7.49743 4.46807 7.85057 3.61189 8.48127 2.98119C9.11197 2.35049 9.96815 1.99735 10.8601 2.00001H13.1401C14.032 1.99735 14.8882 2.35049 15.5189 2.98119C16.1496 3.61189 16.5028 4.46807 16.5001 5.36001V8.00001C16.5001 9.06088 16.0787 10.0783 15.3285 10.8284C14.5784 11.5786 13.561 12 12.5001 12Z" fill="#823B09"/>
             </svg>
           </MypageBtn>
         </DotoriSection>
+        {
+          showLogoutModal && ( <LogoutModal setShowLogoutModal={setShowLogoutModal} /> )
+        }
       </TopBar>
         <Content>
         <Title1>내 정보</Title1>
             <Title>아이디</Title>
             <UserData>{dummy.username}</UserData>
-            <Title>비밀번호</Title>
-            <UserData>{dummy.password}</UserData>
             <Title>다람쥐 닉네임</Title>
             <UserData>{userData.nickname}</UserData>
             <DaramImage src={userData.squirrelImage} alt="Daram" />
@@ -172,7 +174,7 @@ const Content = styled.div`
   align-items: center;
   z-index: 1;
   flex-direction: column;
-  //gap: 3%;
+  gap: 3%;
 
   // 375-440까지는 화면 비율에 맞춰서 변경. 이외 범위는 최소 최대 범위로 고정
   @media (min-width: 440px) {
