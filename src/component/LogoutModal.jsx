@@ -10,6 +10,12 @@ const LogoutModal = () => {
     window.location.href = `/mypage/${localStorage.getItem("urlRnd")}`;
   }
 
+  const ModaloutHandler= (e) => {
+    if (e.target === e.currentTarget) {
+      setShowLogoutModal(false);
+    }
+  }
+
   const logoutHandler = () => {
     localStorage.clear();
     navigate(`/`);
@@ -17,7 +23,7 @@ const LogoutModal = () => {
 
   return (
     <ModalContainer>
-      <ModalWrapper>
+      <ModalWrapper onClick={ModaloutHandler}>
         <Buttons>
           <Button onClick={gomypage}>내 정보</Button>
           <Button onClick={logoutHandler}>로그아웃</Button>
