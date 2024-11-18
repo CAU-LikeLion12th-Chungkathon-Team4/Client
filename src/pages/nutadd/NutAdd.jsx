@@ -43,7 +43,7 @@ const NutAdd = () => {
       // api 보내기 로직
       try {
         // 임시코드 - urlRnd 일단 로컬스토리지 저장된거 가져오기 - 나중에 url에서 가져와야 함
-        const testUrlRnd = localStorage.getItem("urlRnd");
+       //const testUrlRnd = localStorage.getItem("urlRnd");
 
         const requestJson = {
           sender: nick,
@@ -63,13 +63,13 @@ const NutAdd = () => {
           formData.append("files", file);
         });
 
-        const response = await nutAdd(formData, testUrlRnd); // 나중에 수정해야 할 로직
+        const response = await nutAdd(formData, urlRnd);
         console.log(response.data);
         alert("등록되었습니다!!");
 
         if (localStorage.getItem("urlRnd")) {
           // 홈 화면으로 이동
-          navigate(`/home/${localStorage.getItem("urlRnd")}`);
+          navigate(`/home/${urlRnd}`);
         } else {
           // 선물하기 플로우 마지막 화면 렌더링
           setStep(step + 1);
