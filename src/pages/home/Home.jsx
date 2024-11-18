@@ -117,85 +117,8 @@ const Home = () => {
     console.log(dotori_collection_id);
   };
 
-  /*
-
-  const handleGiftButtonClick = async () => {
-    const response = await isFull(yourUrlRndValue);
-    //console.log(response.data)
-    if (response.data.isFull) {
-      alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
-    } else if (userData.isOwner) {
-      // URL 복사 로직
-      const currentUrl = window.location.href;
-      navigator.clipboard
-        .writeText(currentUrl)
-        .then(() => {
-          setShowClipboardMessage(true); // 복사 알림 메시지 표시
-          setTimeout(() => {
-            setShowClipboardMessage(false); // 일정 시간 후 메시지 숨기기
-          }, 3000); // 3초 동안 표시
-        })
-        .catch((error) => {
-          console.error("URL 복사 실패:", error);
-        });
-    } else {
-      navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
-    }
-  };
-
-
-const handleGiftButtonClick = async (e) => {
-  e.preventDefault();
-  const response = await isFull(yourUrlRndValue);
-  if (response.data.isFull) {
-    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
-  } else if (userData.isOwner) {
-    // URL 복사 로직
-    const currentUrl = window.location.href;
-    navigator.clipboard.writeText(currentUrl)
-      .then(() => {
-        setShowClipboardMessage(true); // 복사 알림 메시지 표시
-        setTimeout(() => {
-          setShowClipboardMessage(false); // 일정 시간 후 메시지 숨기기
-        }, 3000); // 3초 동안 표시
-      })
-      .catch((error) => {
-        console.error("URL 복사 실패:", error);
-      });
-  } else {
-    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
-  }
-};
-
-
-const handleGiftButtonClick = async (e) => {
-  e.preventDefault();
-  const response = await isFull(yourUrlRndValue);
-  if (response.data.isFull) {
-    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
-  } else if (userData.isOwner) {
-    // URL 복사 로직
-    const currentUrl = window.location.href;
-
-    // 텍스트 영역을 동적으로 생성하여 복사
-    const textarea = document.createElement("textarea");
-    textarea.value = currentUrl; // 복사할 텍스트
-    document.body.appendChild(textarea);
-    textarea.select(); // 텍스트 영역 선택
-    document.execCommand("copy"); // 복사 명령 실행
-    document.body.removeChild(textarea); // 텍스트 영역 제거
-
-    // 복사 알림 메시지 표시
-    setShowClipboardMessage(true);
-    setTimeout(() => {
-      setShowClipboardMessage(false); // 일정 시간 후 메시지 숨기기
-    }, 3000); // 3초 동안 표시
-  } else {
-    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
-  }
-};
-*/
-
+/*
+//보낸 코드
 const copyToClipboardFallback = (text) => {
   const input = document.createElement("input");
   input.value = text;
@@ -234,6 +157,35 @@ const handleGiftButtonClick = async (e) => {
     navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
   }
 };
+*/
+
+const copyToClipboardFallback = (text) => {
+  const input = document.createElement("input");
+  input.value = text;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("copy");
+  document.body.removeChild(input);
+};
+
+const handleGiftButtonClick = async (e) => {
+  e.preventDefault();
+  const response = await isFull(yourUrlRndValue);
+  if (response.data.isFull) {
+    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
+  } else if (userData.isOwner) {
+    const currentUrl = window.location.href;
+
+    // 클립보드 복사 및 메시지 표시
+    console.log("클립보드 복사");
+    copyToClipboardFallback(currentUrl);
+    setShowClipboardMessage(true);
+    setTimeout(() => setShowClipboardMessage(false), 3000);
+  } else {
+    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
+  }
+};
+
 
 /*
 const handleGiftButtonClick = async (e) => {
