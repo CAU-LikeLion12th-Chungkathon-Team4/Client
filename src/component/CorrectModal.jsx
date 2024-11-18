@@ -2,10 +2,10 @@ import React from 'react'
 import styled from 'styled-components';
 import CancelButton from './CancelButton';
 
-const CorrectModal = () => {
+const CorrectModal = ({ onClose }) => {
   return (
         <Modal>
-          <CancelButton/>
+          <CancelButton onClick={onClose}/>
           <TextBox>정답이에요!<br/>나무에서 친구가 보낸 도토리를<br/>확인해 보세요.</TextBox>
         </Modal>
       )

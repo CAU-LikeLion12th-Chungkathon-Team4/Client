@@ -23,6 +23,7 @@ padding-top: 20px;
 height: auto;
 justify-content: right;
 align-items: right;
+z-index: 20;
 `;
 
 const Button = styled.div`
