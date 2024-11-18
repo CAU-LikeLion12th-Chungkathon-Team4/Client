@@ -17,12 +17,11 @@ export const nutAdd = async (formData, urlRnd) => {
   } catch(error){
     console.error(error);
   }
-  
 };
 
 export const isFull = async (urlRnd) => {
   try{
-    const response = await axios.post(
+    const response = await axios.get(
       `${baseUrl}/dotoricollection/${urlRnd}/isFull`
     );
     return response;
