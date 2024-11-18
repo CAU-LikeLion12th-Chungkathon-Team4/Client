@@ -20,6 +20,8 @@ const Home = () => {
   });
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
 
+  const [clickedImgNum, setClickedImgNum] = useState(); // 지금 클릭한 도토리 가방 번호 관리
+
   // const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
 
   const navigate = useNavigate();
@@ -46,55 +48,58 @@ const Home = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-        const accessToken = localStorage.getItem("access");
+      const accessToken = localStorage.getItem("access");
 
-        if (!accessToken) {
-            navigate("/join");
-            return;
-        }
+      if (!accessToken) {
+        navigate("/join");
+        return;
+      }
 
-        try {
-            // 사용자 데이터 가져오기
-            const user = await fetchUserData(urlRnd, accessToken);
-            const localUrlRnd = localStorage.getItem("urlRnd");
-            const isOwner = localUrlRnd === urlRnd;
+      try {
+        // 사용자 데이터 가져오기
+        const user = await fetchUserData(urlRnd, accessToken);
+        const localUrlRnd = localStorage.getItem("urlRnd");
+        const isOwner = localUrlRnd === urlRnd;
 
-            setUserData({ ...user, isOwner });
+        setUserData({ ...user, isOwner });
 
-            // 도토리 데이터 가져오기
-            const rawDotoriData = await fetchDotoriCollection(urlRnd);
+        // 도토리 데이터 가져오기
+        const rawDotoriData = await fetchDotoriCollection(urlRnd);
 
-            // createdAt 기준 정렬 후 custom_id 재할당
-            const sortedDotoriData = rawDotoriData
-                .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-                .map((item, index) => ({
-                    ...item,
-                    custom_id: index, // 정렬된 순서에 맞게 ID 재할당
-                }));
+        // createdAt 기준 정렬 후 custom_id 재할당
+        const sortedDotoriData = rawDotoriData
+          .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+          .map((item, index) => ({
+            ...item,
+            custom_id: index, // 정렬된 순서에 맞게 ID 재할당
+          }));
 
-            setDotoriData(sortedDotoriData);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        }
+        setDotoriData(sortedDotoriData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
 
     fetchData();
-}, [urlRnd, navigate]);
+  }, [urlRnd, navigate]);
 
-// 이미지 클릭 핸들러 수정
-const handleImageClick = (isLock, dotoriCollectionId) => {
-  if (isLock) {
-    navigate(`/dotoricollection/${dotoriCollectionId}/quiz`);
-  } else {
-    navigate(`/${dotoriCollectionId}/open`);
-  }
-};
+  // 이미지 클릭 핸들러 수정
+  const handleImageClick = (lock, dotori_collection_id) => {
+    if (lock) {
+      setquizModalOpen(true); // 퀴즈 모달 열기
+    } else {
+      setdotoriModalOpen(true); // 도토리 모달 열기
+    }
+    setClickedImgNum(dotori_collection_id);
+    console.log(dotori_collection_id);
+  };
 
   const handleGiftButtonClick = () => {
     if (userData.isOwner) {
       // URL 복사 로직
       const currentUrl = window.location.href;
-      navigator.clipboard.writeText(currentUrl)
+      navigator.clipboard
+        .writeText(currentUrl)
         .then(() => {
           setShowClipboardMessage(true); // 복사 알림 메시지 표시
           setTimeout(() => {
@@ -108,53 +113,77 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
       navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
     }
   };
-
   // 홈 화면 렌더링 될 때 리코일로 업데이트
 
   return (
     <Container>
       <BackgroundWrapper>
-      <TopBar>
-        <Logo onClick={() => window.location.href = `/home/${localStorage.getItem("urlRnd")}`} src="/source/logoWithName.png" alt="Logo" />
-        <DotoriSection>
-          <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
-          <DotoriCount>{dotoriData.length}</DotoriCount>
-          <MypageBtn onClick={() => window.location.href = `/mypage/${localStorage.getItem("urlRnd")}`}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M16.6401 22H7.36009C6.34927 21.9633 5.40766 21.477 4.79244 20.6742C4.17722 19.8713 3.95266 18.8356 4.18009 17.85L4.42009 16.71C4.69613 15.1668 6.02272 14.0327 7.59009 14H16.4101C17.9775 14.0327 19.3041 15.1668 19.5801 16.71L19.8201 17.85C20.0475 18.8356 19.823 19.8713 19.2077 20.6742C18.5925 21.477 17.6509 21.9633 16.6401 22Z" fill="#823B09"/>
-              <path d="M12.5001 12H11.5001C9.29096 12 7.50009 10.2092 7.50009 8.00001V5.36001C7.49743 4.46807 7.85057 3.61189 8.48127 2.98119C9.11197 2.35049 9.96815 1.99735 10.8601 2.00001H13.1401C14.032 1.99735 14.8882 2.35049 15.5189 2.98119C16.1496 3.61189 16.5028 4.46807 16.5001 5.36001V8.00001C16.5001 9.06088 16.0787 10.0783 15.3285 10.8284C14.5784 11.5786 13.561 12 12.5001 12Z" fill="#823B09"/>
-            </svg>
-          </MypageBtn>
-        </DotoriSection>
-      </TopBar>
-      {/* 복사 알림 메시지 */}
-      {showClipboardMessage && (
-        <ClipboardMessage>
-          클립보드에 복사되었습니다.<br /><br />
-          지금 친구들에게 <span>링크를 공유</span>해<br />
-          <span>도토리를 수집</span>해 보세요!
-        </ClipboardMessage>
-      )}
-        <Content>
-        <LockImagesWrapper>
-        {dotoriData
-          .slice() // 원본 배열 복사
-          .reverse() // 배열 순서 뒤집기
-          .map(({ custom_id, dotori_collection_id, lock, sender }) => (
-            <LockItem
-                key={custom_id}
-                align={custom_id % 2 === 0 ? "left" : "right"}
+        <TopBar>
+          <Logo
+            onClick={() =>
+              (window.location.href = `/home/${localStorage.getItem("urlRnd")}`)
+            }
+            src="/source/logoWithName.png"
+            alt="Logo"
+          />
+          <DotoriSection>
+            <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
+            <DotoriCount>{dotoriData.length}</DotoriCount>
+            <MypageBtn
+              onClick={() =>
+                (window.location.href = `/mypage/${localStorage.getItem(
+                  "urlRnd"
+                )}`)
+              }
             >
-                <LockImage
-                    src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
-                    className={'modal-open-btn'}
-                    alt={lock ? "Lock" : "Nut"}
-                    onClick={() => lock ? setquizModalOpen(true) : setdotoriModalOpen(true)}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M16.6401 22H7.36009C6.34927 21.9633 5.40766 21.477 4.79244 20.6742C4.17722 19.8713 3.95266 18.8356 4.18009 17.85L4.42009 16.71C4.69613 15.1668 6.02272 14.0327 7.59009 14H16.4101C17.9775 14.0327 19.3041 15.1668 19.5801 16.71L19.8201 17.85C20.0475 18.8356 19.823 19.8713 19.2077 20.6742C18.5925 21.477 17.6509 21.9633 16.6401 22Z"
+                  fill="#823B09"
                 />
-                <SenderName>{sender}</SenderName>
-            </LockItem>
-
-          ))}
+                <path
+                  d="M12.5001 12H11.5001C9.29096 12 7.50009 10.2092 7.50009 8.00001V5.36001C7.49743 4.46807 7.85057 3.61189 8.48127 2.98119C9.11197 2.35049 9.96815 1.99735 10.8601 2.00001H13.1401C14.032 1.99735 14.8882 2.35049 15.5189 2.98119C16.1496 3.61189 16.5028 4.46807 16.5001 5.36001V8.00001C16.5001 9.06088 16.0787 10.0783 15.3285 10.8284C14.5784 11.5786 13.561 12 12.5001 12Z"
+                  fill="#823B09"
+                />
+              </svg>
+            </MypageBtn>
+          </DotoriSection>
+        </TopBar>
+        {/* 복사 알림 메시지 */}
+        {showClipboardMessage && (
+          <ClipboardMessage>
+            클립보드에 복사되었습니다.
+            <br />
+            <br />
+            지금 친구들에게 <span>링크를 공유</span>해<br />
+            <span>도토리를 수집</span>해 보세요!
+          </ClipboardMessage>
+        )}
+        <Content>
+          <LockImagesWrapper>
+            {dotoriData
+              .slice() // 원본 배열 복사
+              .reverse() // 배열 순서 뒤집기
+              .map(({ custom_id, dotori_collection_id, lock, sender }) => (
+                <LockItem
+                  key={custom_id}
+                  align={custom_id % 2 === 0 ? "left" : "right"}
+                >
+                  <LockImage
+                    src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
+                    className={"modal-open-btn"}
+                    alt={lock ? "Lock" : "Nut"}
+                    onClick={() => handleImageClick(lock, dotori_collection_id)}
+                  />
+                  <SenderName>{sender}</SenderName>
+                </LockItem>
+              ))}
           </LockImagesWrapper>
           <BottomSection>
             <Title>
@@ -174,11 +203,10 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
               </RightSection>
             </BoxWrapper>
           </BottomSection>
-          {quizmodalOpen && (
-          <QuizModal setquizModalOpen={setquizModalOpen} /> ) }
-                {
-        dotorimodalOpen && (
-          <DotoriModal setdotoriModalOpen={setdotoriModalOpen} /> ) }
+          {quizmodalOpen && <QuizModal setquizModalOpen={setquizModalOpen} clickedImgNum={clickedImgNum} />}
+          {dotorimodalOpen && (
+            <DotoriModal setdotoriModalOpen={setdotoriModalOpen} clickedImgNum={clickedImgNum} />
+          )}
         </Content>
       </BackgroundWrapper>
     </Container>
@@ -266,9 +294,9 @@ const DotoriCount = styled.span`
   margin-right: 20px;
 `;
 const MypageBtn = styled.button`
-background-color: transparent;
-border: none;
-display: flex;
+  background-color: transparent;
+  border: none;
+  display: flex;
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;
@@ -284,7 +312,8 @@ const LockImagesWrapper = styled.div`
 const LockItem = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: ${(props) => (props.align === "left" ? "flex-start" : "flex-end")};
+  align-items: ${(props) =>
+    props.align === "left" ? "flex-start" : "flex-end"};
   width: 100%;
   margin-left: ${(props) => (props.align === "left" ? "5vw" : "0")};
   margin-right: ${(props) => (props.align === "right" ? "5vw" : "0")};
@@ -324,7 +353,7 @@ const Title = styled.h1`
   align-self: flex-end;
   margin-right: -5%;
   span {
-    color: #823B09; /* 강조 부분 색상 */
+    color: #823b09; /* 강조 부분 색상 */
   }
 `;
 
@@ -360,14 +389,14 @@ const AcornText = styled.p`
   line-height: 26px;
   white-space: nowrap;
   span {
-    color: #823B09; /* 강조 부분 색상 */
+    color: #823b09; /* 강조 부분 색상 */
   }
 `;
 
 const GiftButton = styled.button`
   font-size: 18px;
   color: white;
-  background-color: #823B09;
+  background-color: #823b09;
   border: none;
   margin-right: 20%;
   margin-bottom: 110%;
@@ -397,7 +426,7 @@ const ClipboardMessage = styled.div`
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   white-space: nowrap; /* 줄 바꿈 방지 */
   span {
-    color: #823B09; /* 강조 부분 색상 */
+    color: #823b09; /* 강조 부분 색상 */
     font-weight: bold; /* 강조 텍스트 두껍게 */
   }
 `;
