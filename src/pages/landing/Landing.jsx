@@ -8,9 +8,7 @@ const Landing = () => {
   const gologin = () => {
     navigate('/login');
   } 
-  const goPresent = () => {
-    navigate('/gift');
-  }
+
 return (
   <Container >
     <BackgroundWrapper>
@@ -18,7 +16,6 @@ return (
       </BackgroundWrapper>
       <Content>
       <LoginBtn onClick={gologin}>로그인</LoginBtn>
-      <PresentBtn onClick={goPresent}>도토리 선물하기</PresentBtn>
       </Content>
   </Container>
 );
