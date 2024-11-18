@@ -2,14 +2,17 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
-import Header from "../../component/Header.jsx";
-import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
-import { useRecoilState } from 'recoil';
+import QuizModal from "../../component/QuizModal.jsx";
+import DotoriModal from "../../component/DotoriModal.jsx";
+// import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
+// import { useRecoilState } from 'recoil';
 
 const Home = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
   const [scrollControl, setScrollControl] = useState(0);
   const [dotoriData, setDotoriData] = useState([]);
+  const [quizmodalOpen, setquizModalOpen] = useState(false);
+  const [dotorimodalOpen, setdotoriModalOpen] = useState(false);
   const [userData, setUserData] = useState({
     nickname: "사용자",
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
@@ -17,15 +20,15 @@ const Home = () => {
   });
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
 
-  const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
+  // const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
 
   const navigate = useNavigate();
 
   // url에서 공유받은 링크의 yourUrlRnd 값 가져오기
-  useEffect(() => {
-    setYourUrlRndAtom(urlRnd);
-    console.log(yourUrlRndValue);
-  }, [yourUrlRndValue, setYourUrlRndAtom]);
+  // useEffect(() => {
+  //   setYourUrlRndAtom(urlRnd);
+  //   console.log(yourUrlRndValue);
+  // }, [yourUrlRndValue, setYourUrlRndAtom]);
 
   useEffect(() => {
     window.scrollTo({
@@ -77,7 +80,6 @@ const Home = () => {
 
     fetchData();
 }, [urlRnd, navigate]);
-
 
 // 이미지 클릭 핸들러 수정
 const handleImageClick = (isLock, dotoriCollectionId) => {
@@ -145,8 +147,9 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
             >
                 <LockImage
                     src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
+                    className={'modal-open-btn'}
                     alt={lock ? "Lock" : "Nut"}
-                    onClick={() => handleImageClick(lock, dotori_collection_id)}
+                    onClick={() => lock ? setquizModalOpen(true) : setdotoriModalOpen(true)}
                 />
                 <SenderName>{sender}</SenderName>
             </LockItem>
@@ -171,6 +174,11 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
               </RightSection>
             </BoxWrapper>
           </BottomSection>
+          {quizmodalOpen && (
+          <QuizModal setquizModalOpen={setquizModalOpen} /> ) }
+                {
+        dotorimodalOpen && (
+          <DotoriModal setdotoriModalOpen={setdotoriModalOpen} /> ) }
         </Content>
       </BackgroundWrapper>
     </Container>

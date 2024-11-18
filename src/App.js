@@ -20,10 +20,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/join" element={<Join />} />
         <Route path="/modaltest" element={<ModalTestPage />} />
-        <Route path="/mypage" element={<Mypage />} />
+        <Route path="/mypage/:urlRnd" element={<Mypage />} />
         <Route path="/gift/:urlRnd" element={<NutAdd />} />
       </Routes>
-    </RecoilRoot>
+
+    </>
   );
 }
 
