@@ -79,13 +79,14 @@ const Home = () => {
 }, [urlRnd, navigate]);
 
 
-  const handleImageClick = (isLock, id) => {
-    if (isLock) {
-      navigate(`/photo/${id}`);
-    } else {
-      navigate(`/quiz/${id}`);
-    }
-  };
+// 이미지 클릭 핸들러 수정
+const handleImageClick = (isLock, dotoriCollectionId) => {
+  if (isLock) {
+    navigate(`/dotoricollection/${dotoriCollectionId}/quiz`);
+  } else {
+    navigate(`/${dotoriCollectionId}/open`);
+  }
+};
 
   const handleGiftButtonClick = () => {
     if (userData.isOwner) {
@@ -137,7 +138,7 @@ const Home = () => {
         {dotoriData
           .slice() // 원본 배열 복사
           .reverse() // 배열 순서 뒤집기
-          .map(({ custom_id, lock, sender }) => (
+          .map(({ custom_id, dotori_collection_id, lock, sender }) => (
             <LockItem
                 key={custom_id}
                 align={custom_id % 2 === 0 ? "left" : "right"}
@@ -145,7 +146,7 @@ const Home = () => {
                 <LockImage
                     src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
                     alt={lock ? "Lock" : "Nut"}
-                    onClick={() => handleImageClick(lock, custom_id)}
+                    onClick={() => handleImageClick(lock, dotori_collection_id)}
                 />
                 <SenderName>{sender}</SenderName>
             </LockItem>
