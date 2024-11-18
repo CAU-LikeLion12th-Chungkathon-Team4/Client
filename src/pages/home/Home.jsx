@@ -488,7 +488,7 @@ const LockItem = styled.div`
   align-items: ${(props) =>
     props.align === "left" ? "flex-start" : "flex-end"};
   width: 100%;
-  margin-left: ${(props) => (props.align === "left" ? "4.5vw" : "0")};
+  margin-left: ${(props) => (props.align === "left" ? "4.7vw" : "0")};
   margin-right: ${(props) => (props.align === "right" ? "0" : "0")};
 `;
 
@@ -505,8 +505,8 @@ const SenderName = styled.span`
   color: white;
   text-align: center;
   word-break: break-word;
-  margin-left: ${(props) => (props.align === "left" ? "-7%" : "0")};
-  margin-right: ${(props) => (props.align === "right" ? "-7%" : "0")};
+  margin-left: ${(props) => (props.align === "left" ? "7%" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "7%" : "0")};
 `;
 
 const BottomSection = styled.div`
