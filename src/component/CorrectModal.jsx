@@ -2,10 +2,16 @@ import React from 'react'
 import styled from 'styled-components';
 import CancelButton from './CancelButton';
 
-const CorrectModal = ({ onClose }) => {
+const CorrectModal = ({ setquizModalOpen ,setIsCorrectModalOpen}) => {
+
+  const handleCancel = () => {
+    setquizModalOpen(false);
+    setIsCorrectModalOpen(false);
+  };
+
   return (
         <Modal>
-          <CancelButton onClick={onClose}/>
+          <CancelButton onClick={handleCancel}/>
           <TextBox>정답이에요!<br/>나무에서 친구가 보낸 도토리를<br/>확인해 보세요.</TextBox>
         </Modal>
       )
@@ -30,7 +36,7 @@ const Modal = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -60%);
-  z-index: 3;
+  z-index: 4;
 `;
 
 const TextBox = styled.div`
