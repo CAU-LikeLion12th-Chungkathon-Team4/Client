@@ -184,7 +184,7 @@ const ConfirmModal = styled.div`
     text-align: center;
 
     /* text/body 1 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -196,7 +196,7 @@ const ConfirmModal = styled.div`
     color: var(--600, #dc2626);
 
     /* text/body 1 */
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
@@ -219,7 +219,7 @@ const ConfirmModal = styled.div`
     border: 2px solid var(--main, #823b09);
     background: var(--white, #fff);
     color: var(--main, #823b09);
-    font-family: "BM JUA_TTF";
+    font-family: BMJUA;
     font-size: 18px;
     font-style: normal;
     font-weight: 400;
@@ -270,6 +270,7 @@ const Modal = styled.div`
   }
   p2 {
     color: var(--main, #823b09);
+    font-family: BMJUA;
   }
   h2 {
     color: #000;
