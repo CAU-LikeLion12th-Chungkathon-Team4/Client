@@ -8,6 +8,27 @@ import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
 import { useRecoilState } from "recoil";
 import { isFull } from "../../api/api_nutAdd.js";
 
+function clip() {
+  const url = window.location.href; // 현재 URL 가져오기
+  const textarea = document.createElement("textarea");
+  textarea.value = url;
+  textarea.style.position = "fixed"; // 화면에서 보이지 않도록 고정
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+
+  try {
+    document.execCommand("copy");
+    alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
+  } catch (err) {
+    console.error("링크 복사 실패:", err);
+    alert("복사에 실패했습니다. 수동으로 복사해주세요.");
+  } finally {
+    document.body.removeChild(textarea);
+  }
+}
+
+
 const Home = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
   const [scrollControl, setScrollControl] = useState(0);
@@ -186,6 +207,7 @@ const handleGiftButtonClick = async (e) => {
   }
 };
 
+//                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
 
 /*
 const handleGiftButtonClick = async (e) => {
@@ -316,8 +338,8 @@ const handleGiftButtonClick = async (e) => {
                   추억 도토리가 <span>{dotoriData.length}</span>개
                   <br />
                   쌓이는 중이에요!
-                </AcornText>
-                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}> 
+                </AcornText> 
+                <GiftButton onClick={clip} onTouchStart={clip}>
                   {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
                 </GiftButton>
               </RightSection>
