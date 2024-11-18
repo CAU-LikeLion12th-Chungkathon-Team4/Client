@@ -7,10 +7,12 @@ const WrongModal = ({ setIsWrongModalOpen, setquizModalOpen }) => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
   const [isOpen, setIsOpen] = useState(true);
+  const navigate = useNavigate();
 
   const handleCancel = () => {
     setIsWrongModalOpen(false);
     setquizModalOpen(false);
+    window.location.reload();
   };
 
   // const [userData, setUserData] = useState({

@@ -106,13 +106,14 @@ const Home = () => {
   // 이미지 클릭 핸들러 수정
   const handleImageClick = (lock, dotori_collection_id) => {
     console.log(lock);
-    if (lock) {
+    if (lock && (localStorage.getItem("urlRnd") === urlRnd)) {
       setquizModalOpen(true); // 퀴즈 모달 열기
-    } else{
+    } else if (lock && (localStorage.getItem("urlRnd") != urlRnd)){
+      alert("도토리 나무 주인이 아니에요!!")
+    }else{
       console.log("hihi")
       setdotoriModalOpen(true); // 도토리 모달 열기
     }
-    console.log(dotorimodalOpen);
     setClickedImgNum(dotori_collection_id);
     console.log(dotori_collection_id);
   };

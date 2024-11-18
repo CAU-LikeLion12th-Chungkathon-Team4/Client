@@ -1,58 +1,110 @@
 // 도토리 확인 모달 창
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import CancelButton from "./CancelButton";
-import { dotoriCollectionOpen, dotoriDelete, dotoriPictureList } from "../api/api_dotori";
+import {
+  dotoriCollectionOpen,
+  dotoriDelete,
+  dotoriPictureList,
+} from "../api/api_dotori";
 
-const DotoriModal = ({setdotoriModalOpen, clickedImgNum}) => {
+const DotoriModal = ({ setdotoriModalOpen, clickedImgNum }) => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [dotoriData, setDotoriData] = useState(""); // 도토리 주머니 정보
-  const [dotoriPicture, setDotoriPicture] = useState("")//
+  const [dotoriPicture, setDotoriPicture] = useState([]); //
+  const [currentImg, setCurrentImg] = useState(0); // 미리보기 인덱스 관리
   const navigate = useNavigate();
+
+  const { urlRnd } = useParams();
 
   const closeModal = () => {
     setIsOpen(false);
     setdotoriModalOpen(false);
   };
 
-  const dummy = {
-    username: "김다람",
-    picture: "/source/chicken.png",
-    text: "이 때 먹었던 치킨.. 눈물나게 맛있었잖아.. 기억나지..? 이때 우리...^^ 두번째 줄 다 채워서 세 번째줄까지 쓰게 되면 이렇게기이얼지는데",
-  };
-
   const handleDeleteClick = () => {
-    setShowConfirmModal(true);
+    if (localStorage.getItem("urlRnd") === urlRnd) {
+      setShowConfirmModal(true);
+    } else {
+      alert("도토리 주인이 아니에요!!")
+    }
   };
 
   const handleCancelDelete = () => {
     setShowConfirmModal(false);
   };
 
-  const handleConfirmDelete = () => {
-    // 서버에서 데이터 삭제 로직 추가
-    console.log("도토리 삭제");
-    setShowConfirmModal(false);
-    navigate(`/home`);
+  const handleConfirmDelete = async (dotoriNum) => {
+    console.log(dotoriNum);
+    try {
+      const response = await dotoriDelete(dotoriNum);
+      console.log(response.data);
+
+      // 삭제된 도토리를 dotoriPicture에서 제거
+      const updatedPictures = dotoriPicture.filter(
+        (item, index) => index !== currentImg
+      );
+
+      // 삭제 후 다음 이미지를 선택
+      if (updatedPictures.length > 0) {
+        const nextImgIndex =
+          currentImg >= updatedPictures.length ? 0 : currentImg;
+        setCurrentImg(nextImgIndex);
+      }
+
+      setDotoriPicture(updatedPictures); // 상태 업데이트
+      setShowConfirmModal(false);
+
+      // 사진 하나도 없으면 모달창 닫음 + 페이지 리렌더링
+      if (updatedPictures.length === 0) {
+        closeModal();
+        window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-   // 도토리 정보 가져오기
-   useEffect(() => {
+  // 도토리 정보 가져오기
+  useEffect(() => {
     const getDotoriData = async () => {
       try {
         const response = await dotoriCollectionOpen(clickedImgNum);
         const responsePicture = await dotoriPictureList(clickedImgNum);
+
+        const pictures = responsePicture.data.dotoris.map((item) => ({
+          dotoriNum: item.id,
+          photoUrl: item.photoUrl,
+        }));
+
         setDotoriData(response.data);
-        setDotoriPicture(responsePicture.data);
+        setDotoriPicture(pictures);
       } catch (error) {
         console.error(error);
       }
     };
-
     getDotoriData();
   }, [clickedImgNum]);
+
+  // 이전 이미지로 이동
+  const goPrev = () => {
+    if (dotoriPicture.length > 0) {
+      const prevIndex =
+        currentImg === 0 ? dotoriPicture.length - 1 : currentImg - 1;
+      setCurrentImg(prevIndex); // 이전 이미지로 이동
+    }
+  };
+
+  // 다음 이미지로 이동
+  const goNext = () => {
+    if (dotoriPicture.length > 0) {
+      const nextIndex =
+        currentImg === dotoriPicture.length - 1 ? 0 : currentImg + 1;
+      setCurrentImg(nextIndex); // 다음 이미지로 이동
+    }
+  };
 
   return (
     <Modal>
@@ -75,12 +127,18 @@ const DotoriModal = ({setdotoriModalOpen, clickedImgNum}) => {
         </svg>
       </DeleteBtn>
       <h1>
-        <p2>{dummy.username}</p2>님이 보낸 도토리
+        <p2>{dotoriData.sender}</p2>님이 보낸 도토리
       </h1>
-      <Picture src={dummy.picture} />
+      <Line>
+        <Arrow onClick={goPrev}>&lt;</Arrow>
+        <Picture src={dotoriPicture[currentImg]?.photoUrl} />
+        <Arrow onClick={goNext}>&gt;</Arrow>
+      </Line>
+
       <TextBox>
-        <h2>{dummy.text}</h2>
+        <h2>{dotoriData.message}</h2>
       </TextBox>
+
       {showConfirmModal && (
         <ConfirmModal>
           <p>
@@ -88,7 +146,13 @@ const DotoriModal = ({setdotoriModalOpen, clickedImgNum}) => {
             삭제하시겠어요?
           </p>
           <buttons>
-            <button onClick={handleConfirmDelete}>삭제</button>
+            <button
+              onClick={() =>
+                handleConfirmDelete(dotoriPicture[currentImg]?.dotoriNum)
+              }
+            >
+              삭제
+            </button>
             <button onClick={handleCancelDelete}>취소</button>
           </buttons>
         </ConfirmModal>
@@ -228,7 +292,7 @@ const Modal = styled.div`
     flex-shrink: 0;
   }
 `;
-const Picture = styled.div`
+const Picture = styled.img`
   width: 243px;
   height: 243px;
   border-radius: 6px;
@@ -250,4 +314,21 @@ const TextBox = styled.div`
   border-radius: 6px;
   border: 1px solid var(--main, #823b09);
   background: #fef4e8;
+`;
+
+const Arrow = styled.div`
+  cursor: pointer;
+  color: #823b09;
+  font-size: 30px;
+  position: relative;
+  //z-index: 4px;
+  //margin-bottom: 22%;
+`;
+
+const Line = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
 `;
