@@ -242,14 +242,15 @@ const Content = styled.div`
   height: 100%;
 `;
 const TopBar = styled.div`
-  top: 0;
+  top: 2%;
   position: fixed;
   height: 50px;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 20px;
+  margin-left: 15%;
+  margin-right: 5%;
   //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   z-index: 10;
   //border: 1px solid black;
