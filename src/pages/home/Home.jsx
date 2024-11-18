@@ -4,8 +4,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
 import QuizModal from "../../component/QuizModal.jsx";
 import DotoriModal from "../../component/DotoriModal.jsx";
-// import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
-// import { useRecoilState } from 'recoil';
+import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
+import { useRecoilState } from 'recoil';
 
 const Home = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
@@ -20,15 +20,40 @@ const Home = () => {
   });
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
 
-  // const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
+  const [clickedImgNum, setClickedImgNum] = useState(); // 지금 클릭한 도토리 가방 번호 관리
+
+
+  const [yourUrlRndValue, setYourUrlRndAtom] = useRecoilState(yourUrlRndAtom);
+  const [isAtBottom, setIsAtBottom] = useState(false);
 
   const navigate = useNavigate();
 
+    // 스크롤 상태를 확인하는 함수
+    const checkScrollPosition = () => {
+      const isBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight;
+      setIsAtBottom(isBottom);
+    };
+
+      // 스크롤 이벤트 핸들러 등록
+  useEffect(() => {
+    window.addEventListener("scroll", checkScrollPosition);
+    return () => window.removeEventListener("scroll", checkScrollPosition);
+  }, []);
+
+  // 스크롤 아래로 이동
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
   // url에서 공유받은 링크의 yourUrlRnd 값 가져오기
-  // useEffect(() => {
-  //   setYourUrlRndAtom(urlRnd);
-  //   console.log(yourUrlRndValue);
-  // }, [yourUrlRndValue, setYourUrlRndAtom]);
+  useEffect(() => {
+     setYourUrlRndAtom(urlRnd);
+     console.log(yourUrlRndValue);
+   }, [yourUrlRndValue, setYourUrlRndAtom]);
 
   useEffect(() => {
     window.scrollTo({
@@ -73,6 +98,8 @@ const Home = () => {
                 }));
 
             setDotoriData(sortedDotoriData);
+
+            console.log("Fetched Dotori Data:", sortedDotoriData);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -82,13 +109,15 @@ const Home = () => {
 }, [urlRnd, navigate]);
 
 // 이미지 클릭 핸들러 수정
-const handleImageClick = (isLock, dotoriCollectionId) => {
-  if (isLock) {
-    navigate(`/dotoricollection/${dotoriCollectionId}/quiz`);
-  } else {
-    navigate(`/${dotoriCollectionId}/open`);
-  }
-};
+  const handleImageClick = (lock, dotori_collection_id) => {
+    if (lock) {
+      setquizModalOpen(true); // 퀴즈 모달 열기
+    } else {
+      setdotoriModalOpen(true); // 도토리 모달 열기
+    }
+    setClickedImgNum(dotori_collection_id);
+    console.log(dotori_collection_id);
+  };
 
   const handleGiftButtonClick = () => {
     if (userData.isOwner) {
@@ -119,7 +148,17 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
         <DotoriSection>
           <DotoriImage src="/source/singleDotori.png" alt="Single Dotori" />
           <DotoriCount>{dotoriData.length}</DotoriCount>
-          <MypageBtn onClick={() => window.location.href = `/mypage/${localStorage.getItem("urlRnd")}`}>
+          <MypageBtn
+              onClick={() => {
+                if (userData.isOwner) {
+                  // 소유자인 경우 마이페이지로 이동
+                  window.location.href = `/mypage/${localStorage.getItem("urlRnd")}`;
+                } else {
+                  // 소유자가 아닌 경우 로그인 페이지로 이동
+                  navigate("/login");
+                }
+              }}
+            >
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path d="M16.6401 22H7.36009C6.34927 21.9633 5.40766 21.477 4.79244 20.6742C4.17722 19.8713 3.95266 18.8356 4.18009 17.85L4.42009 16.71C4.69613 15.1668 6.02272 14.0327 7.59009 14H16.4101C17.9775 14.0327 19.3041 15.1668 19.5801 16.71L19.8201 17.85C20.0475 18.8356 19.823 19.8713 19.2077 20.6742C18.5925 21.477 17.6509 21.9633 16.6401 22Z" fill="#823B09"/>
               <path d="M12.5001 12H11.5001C9.29096 12 7.50009 10.2092 7.50009 8.00001V5.36001C7.49743 4.46807 7.85057 3.61189 8.48127 2.98119C9.11197 2.35049 9.96815 1.99735 10.8601 2.00001H13.1401C14.032 1.99735 14.8882 2.35049 15.5189 2.98119C16.1496 3.61189 16.5028 4.46807 16.5001 5.36001V8.00001C16.5001 9.06088 16.0787 10.0783 15.3285 10.8284C14.5784 11.5786 13.561 12 12.5001 12Z" fill="#823B09"/>
@@ -149,9 +188,11 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
                     src={lock ? "/source/lock.png" : "/source/dotoriPocket.png"}
                     className={'modal-open-btn'}
                     alt={lock ? "Lock" : "Nut"}
-                    onClick={() => lock ? setquizModalOpen(true) : setdotoriModalOpen(true)}
+                    onClick={() => handleImageClick(lock, dotori_collection_id)}
                 />
-                <SenderName>{sender}</SenderName>
+                <SenderName align={custom_id % 2 === 0 ? "left" : "right"}>
+                  {sender}
+                </SenderName>
             </LockItem>
 
           ))}
@@ -175,12 +216,18 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
             </BoxWrapper>
           </BottomSection>
           {quizmodalOpen && (
-          <QuizModal setquizModalOpen={setquizModalOpen} /> ) }
+          <QuizModal setquizModalOpen={setquizModalOpen} clickedImgNum={clickedImgNum} /> ) }
                 {
         dotorimodalOpen && (
-          <DotoriModal setdotoriModalOpen={setdotoriModalOpen} /> ) }
+          <DotoriModal setdotoriModalOpen={setdotoriModalOpen} clickedImgNum={clickedImgNum} /> ) }
         </Content>
       </BackgroundWrapper>
+      <ScrollToBottomButton
+        src="../../../source/buttonForDown.png"
+        alt="Scroll to Bottom"
+        onClick={scrollToBottom}
+        isVisible={!isAtBottom} // 버튼 표시 여부 결정
+      />
     </Container>
   );
 };
@@ -195,6 +242,18 @@ const Container = styled.div`
   overflow-x: hidden;
   justify-content: center;
   align-items: center;
+  position: relative;
+`;
+
+const ScrollToBottomButton = styled.img`
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  //display: ${({ isVisible }) => (isVisible ? "block" : "none")};
+  z-index: 1000;
 `;
 
 const BackgroundWrapper = styled.div`
@@ -232,17 +291,16 @@ const Content = styled.div`
   height: 100%;
 `;
 const TopBar = styled.div`
-  top: 0;
+  top:2%;
   position: fixed;
   height: 50px;
-  width: 100%;
+  width: 90%; /* 기본적으로 화면 전체 너비 */
+  max-width: 380px; /* BackgroundWrapper의 최대 너비에 맞추기 */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 20px;
-  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-right: 2%;
   z-index: 10;
-  //border: 1px solid black;
 `;
 
 const Logo = styled.img`
@@ -252,30 +310,28 @@ const Logo = styled.img`
 const DotoriSection = styled.div`
   display: flex;
   align-items: center;
-  padding-right: 40px;
 `;
 
 const DotoriImage = styled.img`
   height: 20px;
-  margin-right: 5px;
+  margin-right: 10px;
 `;
 
 const DotoriCount = styled.span`
   font-size: 16px;
   color: #333;
-  margin-right: 20px;
+  margin-right: 20%;
 `;
 const MypageBtn = styled.button`
 background-color: transparent;
 border: none;
-display: flex;
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7.1vh;
+  gap: 6.8vh;
   position: absolute;
   bottom: 6.5%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
@@ -286,12 +342,13 @@ const LockItem = styled.div`
   flex-direction: column;
   align-items: ${(props) => (props.align === "left" ? "flex-start" : "flex-end")};
   width: 100%;
-  margin-left: ${(props) => (props.align === "left" ? "5vw" : "0")};
-  margin-right: ${(props) => (props.align === "right" ? "5vw" : "0")};
+  margin-left: ${(props) => (props.align === "left" ? "4.5vw" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "0" : "0")};
 `;
 
 const LockImage = styled.img`
   width: 20vw;
+  max-width: 100px; /* 너무 커지지 않도록 제한 */
   height: auto;
   cursor: pointer;
 `;
@@ -302,10 +359,12 @@ const SenderName = styled.span`
   color: white;
   text-align: center;
   word-break: break-word;
+  margin-left: ${(props) => (props.align === "left" ? "-7%" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "-7%" : "0")};
 `;
 
 const BottomSection = styled.div`
-  display: flex;
+  display: flex;;
   flex-direction: column;
   align-items: center;
   position: absolute;

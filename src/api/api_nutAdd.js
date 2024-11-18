@@ -3,14 +3,31 @@ import axios from "axios";
 const baseUrl = "https://photori.n-e.kr";
 
 export const nutAdd = async (formData, urlRnd) => {
-  const response = await axios.post(
-    `${baseUrl}/dotoricollection/${urlRnd}/create`,
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    }
-  );
-  return response;
+  try{
+    const response = await axios.post(
+      `${baseUrl}/dotoricollection/${urlRnd}/create`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response;
+  } catch(error){
+    console.error(error);
+  }
+  
+};
+
+export const isFull = async (urlRnd) => {
+  try{
+    const response = await axios.post(
+      `${baseUrl}/dotoricollection/${urlRnd}/isFull`
+    );
+    return response;
+  } catch(error){
+    console.error(error);
+  }
+  
 };
