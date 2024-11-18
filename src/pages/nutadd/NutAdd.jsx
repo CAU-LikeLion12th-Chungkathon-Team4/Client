@@ -5,8 +5,9 @@ import DefaultButton from "../../component/DefaultButton";
 import MakePhotoBox from "../../component/nutAdd/MakePhotoBox";
 import MakeMessageBox from "../../component/nutAdd/MakeMessageBox";
 import MakeQuiz from "../../component/nutAdd/MakeQuiz";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ConfirmNutAdd from "../../component/nutAdd/ConfirmNutAdd";
+import { nutAdd } from "../../api/api_nutAdd";
 
 const NutAdd = () => {
   const [step, setStep] = useState(1); // 스탭 관리
@@ -16,9 +17,12 @@ const NutAdd = () => {
     "올해도 너와 함께해서 너무 행복했어!! 우리 내년에도 함께하자!!"
   ); // 메세지 관리
   const [quizText, setQuizText] = useState(""); // 퀴즈 텍스트
-  const [quizAns, setQuizAns] = useState(true); // 퀴즈 정답
+  const [quizAns, setQuizAns] = useState(null); // 퀴즈 정답
+
+  const { urlRnd } = useParams(); // URL에서 urlRnd 가져오기
 
   const navigate = useNavigate();
+  
 
   // step 관리 함수
   const handleStep = () => {
@@ -33,28 +37,61 @@ const NutAdd = () => {
   const handleSubmit = async () => {
     if (!quizText) {
       alert("퀴즈를 만들어 주세요!!");
-    } else {
+    } else if(quizAns == null){
+      alert("퀴즈 답변을 작성해 주세요!!")
+    }else {
       // api 보내기 로직
-      alert("등록되었습니다!!");
-    }
-    console.log(photos);
-    console.log(nick);
-    console.log(message);
-    console.log(quizText);
-    console.log(quizAns);
+      try {
+        // 임시코드 - urlRnd 일단 로컬스토리지 저장된거 가져오기 - 나중에 url에서 가져와야 함
+        const testUrlRnd = localStorage.getItem("urlRnd");
 
-    if (localStorage.getItem("userID")) {
-      // 홈 화면으로 이동
-      navigate("/home");
-    } else {
-      // 선물하기 플로우 마지막 화면 렌더링
-      setStep(step + 1);
+        const requestJson = {
+          sender: nick,
+          message: message,
+          quiz: {
+            question: quizText,
+            answer: quizAns,
+          },
+        };
+  
+        // FormData 생성
+        const formData = new FormData();
+        formData.append("requestJson", JSON.stringify(requestJson)); // JSON 문자열 추가
+  
+        // 사진 파일 추가
+        photos.forEach((file) => {
+          formData.append("files", file);
+        });
+
+        const response = await nutAdd(formData, testUrlRnd); // 나중에 수정해야 할 로직
+        console.log(response.data);
+        alert("등록되었습니다!!");
+
+        if (localStorage.getItem("urlRnd")) {
+          // 홈 화면으로 이동
+          navigate(`/home/${localStorage.getItem("urlRnd")}`);
+        } else {
+          // 선물하기 플로우 마지막 화면 렌더링
+          setStep(step + 1);
+        }
+
+      } catch (error) {
+        console.error(error);
+        alert("도토리 보내기 중 에러가 발생했습니다. 다시 시도해 주세요.");
+      }
     }
+    // console.log(photos);
+    // console.log(nick);
+    // console.log(message);
+    // console.log(quizText);
+    // console.log(quizAns);
+
+    
   };
 
-  const goJoin = ()=>{
-    navigate("/join")
-  }
+  const goJoin = () => {
+    navigate("/join");
+  };
 
   return (
     <Container>
@@ -83,7 +120,7 @@ const NutAdd = () => {
         )}
         {step === 4 && (
           <>
-            <ConfirmNutAdd goJoin={goJoin}/>
+            <ConfirmNutAdd goJoin={goJoin} />
           </>
         )}
       </Content>

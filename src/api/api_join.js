@@ -10,7 +10,7 @@ export const join = async (username, password, nickname, squirrel_type) => {
       username: username,
       password: password,
       nickname: nickname,
-      squirrel_type: squirrel_type,
+      squirrelType: squirrel_type,
     });
     return response.data;
   } catch (error) {

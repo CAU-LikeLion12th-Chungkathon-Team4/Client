@@ -27,8 +27,7 @@ const Join = () => {
 
   // 비밀번호 유효성 검사
   const isValidPW = (pw) => {
-    const pwRegex =
-      /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[a-zA-Z\d!@#$%^&*]{1,12}$/; // 알파벳+숫자+특수문자
+    const pwRegex = /^[a-zA-Z\d!@#$%^&*]{1,12}$/; // 알파벳+숫자+특수문자
     return pwRegex.test(pw);
   };
 
@@ -62,11 +61,12 @@ const Join = () => {
         selectedImg
       );
       localStorage.setItem("accessToken", response.accessToken);
+      localStorage.setItem("userID", response.id);
+      localStorage.setItem("urlRnd", response.urlRnd)
       //console.log(response.accessToken);
       alert("회원가입 완료되었습니다!! 나의 도토리 나무로 이동합니다!!");
       if (response) {
-        // 여기는 나중에 유저 고유 id 붙여서 url 이동해야함!!
-        navigate("/home");
+        navigate(`/home/${localStorage.getItem("urlRnd")}`);
       }
     } catch (error) {
       console.error(error);
