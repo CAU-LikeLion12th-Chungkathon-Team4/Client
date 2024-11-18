@@ -477,6 +477,7 @@ const AcornText = styled.p`
 
 const GiftButton = styled.button`
   font-size: 18px;
+  z-index: 999; /* 다른 요소들보다 높은 값 설정 */
   color: white;
   background-color: #823b09;
   border: none;
