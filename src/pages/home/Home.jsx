@@ -362,10 +362,18 @@ const LockImagesWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6.8vh;
+  gap: 7.5vh;
   position: absolute;
   bottom: 6.5%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
+
+  @media (max-width: 768px) { /* 태블릿 및 작은 화면 */
+    gap: 7.4vh;
+  }
+
+  @media (max-width: 400px) { /* 모바일 화면 */
+    gap: 7vh;
+  }
 `;
 
 const LockItem = styled.div`
@@ -400,7 +408,8 @@ const BottomSection = styled.div`
   flex-direction: column;
   align-items: center;
   position: absolute;
-  top: 93.2%;
+  //top: 93.2%;
+  bottom: 0.05%;
   width: 80%;
   z-index: 1;
 `;
@@ -421,23 +430,35 @@ const Title = styled.h1`
 
 const BoxWrapper = styled.div`
   display: flex;
+  //flex-wrap: wrap; /* 화면 너비를 넘어갈 경우 요소를 감싸도록 설정 */
   align-items: center;
-  //justify-content: center;
+  //justify-content: flex-start; /* 왼쪽 정렬 */
+  justify-content: center;
   margin-right: 10%;
+  position: relative; /* 겹칠 때 RightSection이 위로 쌓이도록 조정 */
   width: 100%;
 `;
 
 const SquirrelImage = styled.img`
+  flex-shrink: 0; /* 이미지 크기를 유지 */
   width: 90%;
-  height: auto;
-  //margin-right: 10px;
+  max-width: 310px;
+  margin-right: 20%;
   margin-left: -10%;
+  height: auto;
+  position: relative; /* 절대 위치가 아닌 일반 위치 설정 */
 `;
 
 const RightSection = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  width: 100%; /* 오른쪽 섹션의 비율 */
+  position: absolute; /* 겹칠 때 RightSection이 위로 쌓이도록 설정 */
+  max-width: 35%; /* 최대 크기 제한 */
+  margin-left: 95%;
+  //right: 0; /* 오른쪽 정렬 */
+  width: auto;
 `;
 
 const AcornText = styled.p`
@@ -445,7 +466,6 @@ const AcornText = styled.p`
   font-weight: bold;
   text-align: right;
   color: black;
-  margin: 0;
   margin-bottom: 30%;
   margin-right: 20%;
   line-height: 26px;
