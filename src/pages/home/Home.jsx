@@ -233,7 +233,7 @@ const Home = () => {
                   <br />
                   쌓이는 중이에요!
                 </AcornText>
-                <GiftButton onClick={handleGiftButtonClick}>
+                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}> 
                   {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
                 </GiftButton>
               </RightSection>
