@@ -117,6 +117,8 @@ const Home = () => {
     console.log(dotori_collection_id);
   };
 
+  /*
+
   const handleGiftButtonClick = async () => {
     const response = await isFull(yourUrlRndValue);
     //console.log(response.data)
@@ -140,6 +142,31 @@ const Home = () => {
       navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
     }
   };
+*/
+
+const handleGiftButtonClick = async (e) => {
+  e.preventDefault();
+  const response = await isFull(yourUrlRndValue);
+  if (response.data.isFull) {
+    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
+  } else if (userData.isOwner) {
+    // URL 복사 로직
+    const currentUrl = window.location.href;
+    navigator.clipboard.writeText(currentUrl)
+      .then(() => {
+        setShowClipboardMessage(true); // 복사 알림 메시지 표시
+        setTimeout(() => {
+          setShowClipboardMessage(false); // 일정 시간 후 메시지 숨기기
+        }, 3000); // 3초 동안 표시
+      })
+      .catch((error) => {
+        console.error("URL 복사 실패:", error);
+      });
+  } else {
+    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
+  }
+};
+
 
   // 홈 화면 렌더링 될 때 리코일로 업데이트
 
