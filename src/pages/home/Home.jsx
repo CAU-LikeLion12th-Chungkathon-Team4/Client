@@ -94,6 +94,8 @@ const Home = () => {
                 }));
 
             setDotoriData(sortedDotoriData);
+
+            console.log("Fetched Dotori Data:", sortedDotoriData);
         } catch (error) {
             console.error("Error fetching data:", error);
         }
@@ -182,7 +184,9 @@ const handleImageClick = (isLock, dotoriCollectionId) => {
                     alt={lock ? "Lock" : "Nut"}
                     onClick={() => lock ? setquizModalOpen(true) : setdotoriModalOpen(true)}
                 />
-                <SenderName>{sender}</SenderName>
+                <SenderName align={custom_id % 2 === 0 ? "left" : "right"}>
+                  {sender}
+                </SenderName>
             </LockItem>
 
           ))}
@@ -284,7 +288,7 @@ const TopBar = styled.div`
   top:2%;
   position: fixed;
   height: 50px;
-  width: 85%; /* 기본적으로 화면 전체 너비 */
+  width: 90%; /* 기본적으로 화면 전체 너비 */
   max-width: 380px; /* BackgroundWrapper의 최대 너비에 맞추기 */
   display: flex;
   justify-content: space-between;
@@ -310,7 +314,7 @@ const DotoriImage = styled.img`
 const DotoriCount = styled.span`
   font-size: 16px;
   color: #333;
-  margin-right: 30%;
+  margin-right: 20%;
 `;
 const MypageBtn = styled.button`
 background-color: transparent;
@@ -349,12 +353,12 @@ const SenderName = styled.span`
   color: white;
   text-align: center;
   word-break: break-word;
-  margin-left: 8%;
-  margin-right: 8%;
+  margin-left: ${(props) => (props.align === "left" ? "-7%" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "-7%" : "0")};
 `;
 
 const BottomSection = styled.div`
-  display: flex;
+  display: flex;;
   flex-direction: column;
   align-items: center;
   position: absolute;
