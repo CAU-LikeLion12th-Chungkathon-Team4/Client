@@ -10,16 +10,11 @@ const Mypage = () => {
 
   const [userData, setUserData] = useState({
     username: "사용자",
-    password: "1234",
     nickname: "사용자",
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
     isOwner: false, // isOwner 초기값 추가
     });
 
-    const dummy = {
-      username: "사용자",
-      password: "1234",
-    };
 
     const navigate = useNavigate();
     const gomypage = () => {
@@ -101,7 +96,7 @@ useEffect(() => {
         <Content>
         <Title1>내 정보</Title1>
             <Title>아이디</Title>
-            <UserData>{dummy.username}</UserData>
+            <UserData>{userData.username}</UserData>
             <Title>다람쥐 닉네임</Title>
             <UserData>{userData.nickname}</UserData>
             <DaramImage src={userData.squirrelImage} alt="Daram" />
