@@ -1,10 +1,25 @@
 // 도토리 사진 추가 박스
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const MakePhotoBox = ({ setPhotos, photos }) => {
   const [preview, setPreview] = useState(null); // 미리보기
   const [currentImg, setCurrentImg] = useState(0); // 미리보기 인덱스 관리
+
+
+  useEffect(() => {
+    // 초기 렌더링 및 상태 업데이트 시 미리보기 업데이트
+    if (photos.length > 0) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result); // 첫 번째 파일의 미리보기 저장
+      };
+      reader.readAsDataURL(photos[currentImg]);
+    } else {
+      setPreview(null); // 사진이 없으면 기본 미리보기 표시
+    }
+  }, [photos, currentImg]);
+
 
   const handleFileChange = (event) => {
     const files = event.target.files;
@@ -15,14 +30,7 @@ const MakePhotoBox = ({ setPhotos, photos }) => {
       const fileArray = Array.from(files);
       //console.log(fileArray)
       setPhotos(fileArray); // 부모 컴포넌트로 파일 전달
-
-      // 첫 번째 파일을 미리보기로 설정
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreview(reader.result); // 첫 번째 파일의 미리보기 저장
-      };
-      reader.readAsDataURL(fileArray[0]); // 첫 번째 파일만 미리보기 처리
-      //console.log(preview)
+      setCurrentImg(0);
     }
   };
 
@@ -31,7 +39,6 @@ const MakePhotoBox = ({ setPhotos, photos }) => {
     if (photos.length > 0) {
       const prevIndex = currentImg === 0 ? photos.length - 1 : currentImg - 1;
       setCurrentImg(prevIndex); // 이전 이미지로 이동
-      updatePreview(prevIndex); // 미리보기 업데이트
     }
   };
 
@@ -40,7 +47,6 @@ const MakePhotoBox = ({ setPhotos, photos }) => {
     if (photos.length > 0) {
       const nextIndex = currentImg === photos.length - 1 ? 0 : currentImg + 1;
       setCurrentImg(nextIndex); // 다음 이미지로 이동
-      updatePreview(nextIndex); // 미리보기 업데이트
     }
   };
 

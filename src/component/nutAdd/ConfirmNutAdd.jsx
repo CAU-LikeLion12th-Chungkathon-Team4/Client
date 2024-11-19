@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const ConfirmNutAdd = ({ goJoin }) => {
+const ConfirmNutAdd = ({ goLogin }) => {
   return (
     <Outer>
       <Container>
@@ -14,9 +14,9 @@ const ConfirmNutAdd = ({ goJoin }) => {
           <TextMiddle>사진과 메시지를 읽어볼 수 있습니다.</TextMiddle>
         </Line>
         <Line>
-          <SubText>나도 다람쥐 만들고 도토리 모으러 갈래!!</SubText>
+          <SubText>나도 다람쥐랑 같이 도토리 모으러 갈래!!</SubText>
         </Line>
-        <GoJoinButton onClick={goJoin}>회원가입 하러 가기</GoJoinButton>
+        <GoJoinButton onClick={goLogin}>로그인</GoJoinButton>
       </Container>
     </Outer>
   );
@@ -47,12 +47,12 @@ const TextTop = styled.div`
   font-size: 160%;
 `;
 const TextMiddle = styled.div`
-  font-size: 110%;
+  font-size: 20px;
   margin-bottom:2%;
 `;
 
 const SubText = styled.div`
-  font-size: 100%;
+  font-size: 14px;
   color: #737373;
   width: 100%;
   display: flex;
