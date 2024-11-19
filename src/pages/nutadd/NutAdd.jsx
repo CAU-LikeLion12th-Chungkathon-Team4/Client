@@ -173,9 +173,10 @@ const NutAdd = () => {
           </>
         )}
       </Content>
-      {isUploading && ( // 수정수정: 업로드 중일 때 모달 표시
+      {isUploading && ( // 업로드 중일 때 모달 표시
         <UploadingModal>
-          이미지를 업로드 중입니다... 잠시만 기다려주세요!
+          <Text>이미지를 업로드 중입니다...</Text>
+          <Text>잠시만 기다려주세요!</Text>
         </UploadingModal>
       )}
     </Container>
@@ -311,9 +312,11 @@ const UploadingModal = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 100;
-  font-size: 18px;
-  color: #333;
-  text-align: center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  
 `;
 
 const ButtonLine = styled.div`
@@ -355,3 +358,9 @@ const StyledDefaultButton = styled.div`
   border-radius: 10px;
   cursor: pointer;
 `;
+
+const Text = styled.div`
+  font-size: 18px;
+  color: #333;
+  text-align: center;
+`
