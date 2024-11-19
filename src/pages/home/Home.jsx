@@ -356,7 +356,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 2%;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const Logo = styled.img`
