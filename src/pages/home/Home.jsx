@@ -1,36 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
+import { CopyToClipboard } from "react-copy-to-clipboard"; // 추가된 import
 import { fetchDotoriCollection, fetchUserData } from "../../api/api_home.js";
 import QuizModal from "../../component/QuizModal.jsx";
 import DotoriModal from "../../component/DotoriModal.jsx";
 import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
 import { useRecoilState } from "recoil";
 import { isFull } from "../../api/api_nutAdd.js";
-
-const copyToClipboard = async (text) => {
-  try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text);
-      console.log("클립보드에 성공적으로 복사되었습니다.");
-    } else {
-      copyToClipboardFallback(text); // Clipboard API 미지원 시 fallback 사용
-    }
-  } catch (error) {
-    console.error("클립보드 복사 중 에러 발생:", error);
-    alert("클립보드 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
-  }
-};
-
-const copyToClipboardFallback = (text) => {
-  const input = document.createElement("input");
-  input.value = text;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand("copy");
-  document.body.removeChild(input);
-};
-
 
 const Home = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
@@ -156,16 +133,6 @@ const Home = () => {
     console.log(dotori_collection_id);
   };
 
-/*
-//보낸 코드
-const copyToClipboardFallback = (text) => {
-  const input = document.createElement("input");
-  input.value = text;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand("copy");
-  document.body.removeChild(input);
-};
 
 const handleGiftButtonClick = async (e) => {
   e.preventDefault();
@@ -173,94 +140,13 @@ const handleGiftButtonClick = async (e) => {
   if (response.data.isFull) {
     alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
   } else if (userData.isOwner) {
-    const currentUrl = window.location.href;
-
-    // URL 문자열을 클립보드에 복사
-    if (navigator.clipboard) {
-      // navigator.clipboard.writeText() 지원되는 경우
-      navigator.clipboard.writeText(currentUrl).then(() => {
-        // 복사 성공 시 메시지 표시
-        setShowClipboardMessage(true);
-        setTimeout(() => {
-          setShowClipboardMessage(false);
-        }, 3000); // 3초 후 메시지 숨기기
-      }).catch((error) => {
-        console.error("복사 실패:", error);
-      });
-    } else {
-      copyToClipboardFallback(currentUrl);
-      setShowClipboardMessage(true);
-      setTimeout(() => setShowClipboardMessage(false), 3000);
-    }
-  } else {
-    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
-  }
-};
-*/
-
-const handleGiftButtonClick = async (e) => {
-  e.preventDefault();
-  const response = await isFull(yourUrlRndValue);
-
-  if (response.data.isFull) {
-    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
-  } else if (userData.isOwner) {
-    const currentUrl = window.location.href;
-
-    try {
-      await copyToClipboard(currentUrl);
-      setShowClipboardMessage(true);
-      setTimeout(() => setShowClipboardMessage(false), 3000); // 3초 후 메시지 숨기기
-    } catch (error) {
-      console.error("복사 실패:", error);
-      alert("복사에 실패했습니다. URL을 직접 복사해주세요.");
-    }
+    setShowClipboardMessage(true);
+    setTimeout(() => setShowClipboardMessage(false), 3000);
   } else {
     navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
   }
 };
 
-//                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
-
-/*
-const handleGiftButtonClick = async (e) => {
-  e.preventDefault();
-  const response = await isFull(yourUrlRndValue);
-  
-  if (response.data.isFull) {
-    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
-  } else if (userData.isOwner) {
-    // URL 복사 로직
-    const currentUrl = window.location.href;
-
-    // 텍스트를 임시 input 요소에 복사
-    const input = document.createElement("input");
-    input.value = currentUrl; // 복사할 URL을 input에 설정
-    document.body.appendChild(input); // DOM에 input 추가
-    input.select(); // 텍스트 선택
-    input.setSelectionRange(0, 9999); // 모바일에서도 잘 작동하도록 범위 설정
-
-    // 복사 명령
-    const isCopied = document.execCommand("copy"); // 텍스트 복사
-    document.body.removeChild(input); // 복사 후 input 요소 삭제
-
-    // 복사 여부 확인 및 알림
-    if (isCopied) {
-      setShowClipboardMessage(true); // 복사 알림 표시
-      setTimeout(() => {
-        setShowClipboardMessage(false); // 일정 시간 후 메시지 숨기기
-      }, 3000); // 3초 동안 표시
-    } else {
-      console.error("복사 실패");
-    }
-  } else {
-    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
-  }
-};
-
-*/
-
-  // 홈 화면 렌더링 될 때 리코일로 업데이트
 
   return (
     <Container>
@@ -360,10 +246,21 @@ const handleGiftButtonClick = async (e) => {
                   <br />
                   쌓이는 중이에요!
                 </AcornText> 
-                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
-                  {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
-                </GiftButton>
-                {showClipboardMessage}
+                <GiftButton onClick={handleGiftButtonClick}>
+                {userData.isOwner ? (
+                  <CopyToClipboard
+                    text={window.location.href} // 복사할 URL
+                    onCopy={() => {
+                      setShowClipboardMessage(true);
+                      setTimeout(() => setShowClipboardMessage(false), 3000);
+                    }}
+                  >
+                    <span>도토리 요청하기</span>
+                  </CopyToClipboard>
+                ) : (
+                  "도토리 선물하기"
+                )}
+              </GiftButton>
               </RightSection>
             </BoxWrapper>
           </BottomSection>
@@ -459,7 +356,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 2%;
-  z-index: 5;
+  z-index: 1;
 `;
 
 const Logo = styled.img`
@@ -478,7 +375,7 @@ const DotoriImage = styled.img`
 
 const DotoriCount = styled.span`
   font-size: 16px;
-  color: var(--main, #823b09);
+  color: #333;
   margin-right: 20%;
 `;
 const MypageBtn = styled.button`
