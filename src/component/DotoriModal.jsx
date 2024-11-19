@@ -255,7 +255,7 @@ const Modal = styled.div`
   z-index: 999;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -60%);
+  transform: translate(-50%, -50%);
   h1 {
     color: #000;
     text-align: center;
