@@ -37,14 +37,14 @@ const Join = () => {
     if (!selectedID) {
       alert("아이디 입력해 주세요!!");
     } else if (!isConfirmID) {
-      alert("아이디 중복 검사 해주세요!!");
+      alert("아이디 중복을 확인해 주세요!!");
     } else if (!isValidID(selectedID)) {
-      alert("아이디는 알파벳+숫자 조합으로 12글자 이내로 설정해 주세요.");
+      alert("아이디는 알파벳 또는 숫자 조합으로 12글자 이내로 설정해 주세요.");
     } else if (!selectedPW) {
       alert("비밀번호 입력해 주세요");
     } else if (!isValidPW(selectedPW)) {
       alert(
-        "비밀번호는 알파벳+숫자+특수문자 조합으로 12글자 이내로 설정해 주세요."
+        "비밀번호는 알파벳, 숫자 또는 특수문자 조합으로 12글자 이내로 설정해 주세요."
       );
     } else {
       setStep(step + 1);

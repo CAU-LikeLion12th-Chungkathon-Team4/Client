@@ -8,13 +8,13 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
   const [currentPW, setCurrentPW] = useState(); // 지금 입력된 pw
   const [currentConfirmID, setCurrentConfirmID] = useState(false); // 중복확인 버튼 눌렸는지 여부
   const [subText, setSubText] = useState({
-    message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+    message: "아이디는 알파벳 또는 숫자 12글자 이내로만 설정 가능해요.",
     color: "#737373",
   }); // 중복확인에 따른 텍스트와 색 관리
 
   // ID 유효성 검사
   const isValidID = (id) => {
-    const idRegex = /^[a-zA-Z0-9]{1,12}$/; // 알파벳+숫자, 최대 12글자
+    const idRegex = /^[a-zA-Z0-9]{1,12}$/; // 알파벳 또는 숫자, 최대 12글자
     return idRegex.test(id);
   };
 
@@ -28,13 +28,13 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
       setIsConfirmID(false);
       setCurrentConfirmID(false);
       setSubText({
-        message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+        message: "아이디는 알파벳 또는 숫자 12글자 이내로만 설정 가능해요.",
         color: "#737373",
       });
     } else {
       setCurrentID();
       setSubText({
-        message: "아이디는 알파벳+숫자 12글자 이내로만 설정 가능해요.",
+        message: "아이디는 알파벳 또는 숫자 12글자 이내로만 설정 가능해요.",
         color: "#dc2626",
       });
     }
@@ -47,7 +47,7 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
       setCurrentPW(newPW);
       setSelectedPW(newPW);
     } else {
-      alert("비밀번호는 알파벳+숫자+특수문자 12글자 이내로만 설정 가능해요.");
+      alert("비밀번호는 12글자 이내로만 설정 가능해요.");
     }
   };
 
@@ -63,7 +63,7 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
       const response = await checkID(currentID);
       if (response.isExist) {
         setSubText({
-          message: "중복된 아이디예요!!",
+          message: "중복된 아이디예요!",
           color: "#dc2626",
         });
         setIsConfirmID(false);
@@ -101,7 +101,7 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
           <ConfirmButton onClick={handleConfirmID}>중복확인</ConfirmButton>
         </Line>
         <SubText1 style={{ color: subText.color }}>{subText.message}</SubText1>
-        <Text2>비밀번호를 입력해 주세요</Text2>
+        <Text2>비밀번호를 입력해 주세요.</Text2>
         <InputBox
           type="text"
           value={currentPW}
@@ -109,7 +109,7 @@ const IdPwBox = ({ setSelectedID, setSelectedPW, setIsConfirmID }) => {
           placeholder="EX) ehxhfl99"
         />
         <SubText2>
-          비밀번호는 알파벳+숫자+특수문자 12글자 이내로만 설정 가능해요.
+          비밀번호는 12글자 이내로만 설정 가능해요.
         </SubText2>
       </Container>
     </Outer>

@@ -45,9 +45,9 @@ const Login = () => {
           <Form>
             <Inputs>
               <div>아이디</div>
-              <input value={username} onChange={onChangeId} placeholder="아이디를 입력해주세요." />
+              <input value={username} onChange={onChangeId} placeholder="아이디를 입력해 주세요." />
               <div>비밀번호</div>
-              <input type="password" value={password} onChange={onChangePw} placeholder="비밀번호를 입력해주세요." />
+              <input type="password" value={password} onChange={onChangePw} placeholder="비밀번호를 입력해 주세요." />
             </Inputs>
           </Form>
         </Wrapper>
@@ -261,6 +261,7 @@ const Inputs = styled.div`
       color: var(--neutral-400, #A3A3A3);
     text-align: left;
     /* text/body 1 */
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;

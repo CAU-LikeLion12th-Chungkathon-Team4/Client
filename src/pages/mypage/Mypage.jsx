@@ -286,12 +286,13 @@ const TopBar = styled.div`
 
 const Logo = styled.img`
   height: 30px;
+  margin-left: 10px;
   cursor: pointer;
 `;
 
 const DotoriSection = styled.div`
   display: flex;
-  margin-right: 15px;
+  margin-right: 20px;
 `;
 
 const DotoriImage = styled.img`
@@ -312,6 +313,7 @@ background-color: transparent;
 border: none;
 display: flex;
 cursor: pointer;
+margin-top: 1px;
 `;
 
 

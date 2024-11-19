@@ -369,20 +369,21 @@ const DotoriSection = styled.div`
   align-items: center;
 `;
 
-const DotoriImage = styled.img`
+const DotoriImage = styled.img` 
   height: 20px;
   margin-right: 10px;
 `;
 
 const DotoriCount = styled.span`
   font-size: 16px;
-  color: #333;
+  color: #823b09;
   margin-right: 20%;
 `;
 const MypageBtn = styled.button`
   background-color: transparent;
   border: none;
   margin-top: 7%;
+
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;
