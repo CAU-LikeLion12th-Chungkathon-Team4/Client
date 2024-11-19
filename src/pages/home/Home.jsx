@@ -368,7 +368,7 @@ const DotoriSection = styled.div`
   align-items: center;
 `;
 
-const DotoriImage = styled.img`
+const DotoriImage = styled.img` 
   height: 20px;
   margin-right: 10px;
 `;
@@ -381,6 +381,7 @@ const DotoriCount = styled.span`
 const MypageBtn = styled.button`
   background-color: transparent;
   border: none;
+  margin-top: 5px;
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;
