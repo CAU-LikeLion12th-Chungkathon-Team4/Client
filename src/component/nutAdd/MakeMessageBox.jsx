@@ -102,7 +102,7 @@ const InputBox = styled.input`
   width: 63.93%;
   height: 65%;
   font-size: 16px;
-  padding-left: 3%;
+  padding-left: 6%;
   padding-right: 3%;
   border-radius: 10px;
   text-align: left;
@@ -120,7 +120,7 @@ const InputBox2 = styled.textarea`
   height: 70%;
   font-size: 16px;
   padding-top: 5%;
-  padding-left: 3%;
+  padding-left: 6%;
   padding-right: 3%;
   border-radius: 10px;
   text-align: left;
