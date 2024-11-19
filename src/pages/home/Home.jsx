@@ -356,7 +356,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 2%;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const Logo = styled.img`
@@ -368,19 +368,20 @@ const DotoriSection = styled.div`
   align-items: center;
 `;
 
-const DotoriImage = styled.img`
+const DotoriImage = styled.img` 
   height: 20px;
   margin-right: 10px;
 `;
 
 const DotoriCount = styled.span`
   font-size: 16px;
-  color: #333;
+  color: #823b09;
   margin-right: 20%;
 `;
 const MypageBtn = styled.button`
   background-color: transparent;
   border: none;
+  margin-top: 5px;
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;

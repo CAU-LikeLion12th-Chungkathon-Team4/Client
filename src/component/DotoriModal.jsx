@@ -316,11 +316,18 @@ const TextBox = styled.div`
   height: 109px;
   padding: 12px 11px;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   border-radius: 6px;
   border: 1px solid var(--main, #823b09);
   background: #fef4e8;
+  text-align: left;
+  h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    text-align: left;
+    width: 100%;
+    }
 `;
 
 const Arrow = styled.div`
