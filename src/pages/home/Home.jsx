@@ -8,25 +8,28 @@ import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
 import { useRecoilState } from "recoil";
 import { isFull } from "../../api/api_nutAdd.js";
 
-function clip() {
-  const url = window.location.href; // 현재 URL 가져오기
-  const textarea = document.createElement("textarea");
-  textarea.value = url;
-  textarea.style.position = "fixed"; // 화면에서 보이지 않도록 고정
-  textarea.style.opacity = "0";
-  document.body.appendChild(textarea);
-  textarea.select();
-
+const copyToClipboard = async (text) => {
   try {
-    document.execCommand("copy");
-    alert("링크가 복사되었습니다. 필요하신 곳에 붙여넣기 하세요!");
-  } catch (err) {
-    console.error("링크 복사 실패:", err);
-    alert("복사에 실패했습니다. 수동으로 복사해주세요.");
-  } finally {
-    document.body.removeChild(textarea);
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+      console.log("클립보드에 성공적으로 복사되었습니다.");
+    } else {
+      copyToClipboardFallback(text); // Clipboard API 미지원 시 fallback 사용
+    }
+  } catch (error) {
+    console.error("클립보드 복사 중 에러 발생:", error);
+    alert("클립보드 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
   }
-}
+};
+
+const copyToClipboardFallback = (text) => {
+  const input = document.createElement("input");
+  input.value = text;
+  document.body.appendChild(input);
+  input.select();
+  document.execCommand("copy");
+  document.body.removeChild(input);
+};
 
 
 const Home = () => {
@@ -195,28 +198,23 @@ const handleGiftButtonClick = async (e) => {
 };
 */
 
-const copyToClipboardFallback = (text) => {
-  const input = document.createElement("input");
-  input.value = text;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand("copy");
-  document.body.removeChild(input);
-};
-
 const handleGiftButtonClick = async (e) => {
   e.preventDefault();
   const response = await isFull(yourUrlRndValue);
+
   if (response.data.isFull) {
     alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
   } else if (userData.isOwner) {
     const currentUrl = window.location.href;
 
-    // 클립보드 복사 및 메시지 표시
-    console.log("클립보드 복사");
-    copyToClipboardFallback(currentUrl);
-    setShowClipboardMessage(true);
-    setTimeout(() => setShowClipboardMessage(false), 3000);
+    try {
+      await copyToClipboard(currentUrl);
+      setShowClipboardMessage(true);
+      setTimeout(() => setShowClipboardMessage(false), 3000); // 3초 후 메시지 숨기기
+    } catch (error) {
+      console.error("복사 실패:", error);
+      alert("복사에 실패했습니다. URL을 직접 복사해주세요.");
+    }
   } else {
     navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
   }
@@ -365,6 +363,7 @@ const handleGiftButtonClick = async (e) => {
                 <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
                   {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
                 </GiftButton>
+                {showClipboardMessage}
               </RightSection>
             </BoxWrapper>
           </BottomSection>
