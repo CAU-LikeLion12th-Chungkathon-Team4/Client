@@ -375,7 +375,7 @@ const DotoriImage = styled.img`
 
 const DotoriCount = styled.span`
   font-size: 16px;
-  color: #333;
+  color: #823b09;
   margin-right: 20%;
 `;
 const MypageBtn = styled.button`
