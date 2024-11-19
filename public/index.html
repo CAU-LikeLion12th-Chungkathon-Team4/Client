@@ -4,16 +4,55 @@
     <meta charset="utf-8" />
     <link rel="icon" href="/public/source/logo.png" />
     <title>연말 추억 수집 서비스 | 포토리</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
-      <meta property="og:type" content="website" />
-      <meta property="og:title" content="연말 추억 수집 서비스 | 포토리" />
-      <!-- 수정사항 유저 닉네임도 함께 공유하기 -->
-      <meta property="og:description" content="@username 님이 도토리를 요청했어요. 친구에게 추억이 담긴 사진을 보내 도토리 나무를 채워주세요." />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="연말 추억 수집 서비스 | 포토리" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta property="og:image" content="/public/source/thumbnail.png" />
+    <!-- 수정사항 유저마다 다른 링크 공유하기 -->
+    <script>
+      const [userData, setUserData] = useState({
+        nickname: "포토리", // 기본값
+        isOwner: false,    // 기본값
+      });
+
+      useEffect(() => {
+        const fetchData = async () => {
+          const accessToken = localStorage.getItem("access");
+
+          try {
+            // 사용자 데이터 가져오기
+            const user = await fetchUserData(urlRnd, accessToken);
+            const localUrlRnd = localStorage.getItem("urlRnd");
+            const isOwner = localUrlRnd === urlRnd;
+
+            // 상태 업데이트
+            setUserData({ ...user, isOwner });
+
+            // 메타 태그 업데이트
+            if (isOwner) {
+              // 사용자 이름이 있을 경우 OG description 수정
+              document.querySelector('meta[property="og:description"]').setAttribute(
+                "content", `${user.nickname}님이 도토리를 요청했어요. 친구에게 추억이 담긴 사진을 보내 도토리 나무를 채워주세요.`
+              );
+              document.querySelector('meta[property="og:url"]').setAttribute("content", `https://photori.netlify.app/home/${urlRnd}`);
+            } else {
+              // 기본 문구 설정
+              document.querySelector('meta[property="og:description"]').setAttribute(
+                "content", `친구에게 추억이 담긴 사진을 보내 도토리 나무를 채워주세요.`)
+                document.querySelector('meta[property="og:url"]').setAttribute("content", `https://photori.netlify.app/`);
+            }
+          } catch (error) {
+            console.error("Error fetching user data:", error);
+          }
+        };
+
+        fetchData();
+      }, []);
+
+    </script>
       <!-- 수정사항 유저마다 다른 링크 공유하기 -->
-      <meta property="og:url" content="" />
-      <meta property="og:locale" content="ko_KR" />
-      <meta property="og:image"content="/public/source/thumbnail.png" />
-       </Head>
+\  </head>
   <body>
     <div id="root"></div>
     <!--
