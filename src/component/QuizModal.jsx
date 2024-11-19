@@ -142,7 +142,7 @@ const Modal = styled.div`
   h5 {
     color: var(--neutral-500, #737373);
     text-align: center;
-    width: 90%;
+    width: 86%;
     font-size: 14px;
     font-weight: 400;
     line-height: 150%; /* 21px */
