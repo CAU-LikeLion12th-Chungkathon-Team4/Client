@@ -44,7 +44,7 @@ const SquBox = ({ setSelectedImg }) => {
   return (
     <Container>
       <Title>| STEP 2 |</Title>
-      <Text>원하는 다람쥐를 선택해 주세요</Text>
+      <Text>원하는 다람쥐를 선택해 주세요.</Text>
       <SubContainer>
         <Arrow onClick={goPrev}>&lt;</Arrow>
         <ImgBox>
