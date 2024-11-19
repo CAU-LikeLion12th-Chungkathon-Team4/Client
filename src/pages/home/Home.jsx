@@ -543,9 +543,9 @@ const BottomSection = styled.div`
   z-index: 1;
 `;
 
-const Title = styled.h1`
+const Title = styled.div`
   font-size: 30px;
-  font-weight: bold;
+  //font-weight: bold;
   color: black;
   white-space: nowrap;
   text-align: right;
@@ -591,8 +591,8 @@ const RightSection = styled.div`
 `;
 
 const AcornText = styled.p`
-  font-size: 18px;
-  font-weight: bold;
+  font-size: 22px;
+  //font-weight: bold;
   text-align: right;
   color: black;
   margin-bottom: 30%;
@@ -608,10 +608,11 @@ const GiftButton = styled.button`
   font-size: 18px;
   z-index: 999; /* 다른 요소들보다 높은 값 설정 */
   color: white;
+  //font-weight: bold;
   background-color: #823b09;
   border: none;
   margin-right: 20%;
-  margin-bottom: 110%;
+  margin-bottom: 130%;
   padding: 12% 25%;
   border-radius: 10px;
   white-space: nowrap;
