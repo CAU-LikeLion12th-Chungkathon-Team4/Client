@@ -84,14 +84,14 @@ const Title = styled.div`
   margin-top: 4%;
 `;
 const Text = styled.div`
-  font-size: 110%;
+  font-size: 19px;
 `;
 
 const SubText = styled.div`
-  font-size: 12px;
+  font-size: 14px;
   color: #737373;
   width: 60.53%;
-  margin-left: -10%;
+  margin-left: -7%;
   margin-bottom: 1%;
 `;
 
@@ -99,10 +99,11 @@ const SubTitle = styled.div`
   color: #737373;
 `;
 const InputBox = styled.input`
-  width: 68.53%;
+  width: 63.93%;
   height: 65%;
-  font-size: 110%;
-  padding-left: 4%;
+  font-size: 16px;
+  padding-left: 3%;
+  padding-right: 3%;
   border-radius: 10px;
   text-align: left;
   background-color: #e5e5e5;
@@ -115,9 +116,9 @@ const InputBox = styled.input`
 `;
 
 const InputBox2 = styled.textarea`
-  width: 66.93%;
+  width: 63.93%;
   height: 70%;
-  font-size: 110%;
+  font-size: 16px;
   padding-top: 5%;
   padding-left: 3%;
   padding-right: 3%;
