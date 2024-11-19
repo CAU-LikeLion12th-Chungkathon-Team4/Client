@@ -21,8 +21,9 @@ const NutAdd = () => {
 
   const { urlRnd } = useParams(); // URL에서 urlRnd 가져오기
 
+  const [isUploading, setIsUploading] = useState(false); // 업로드 상태 관리
+
   const navigate = useNavigate();
-  
 
   // step 관리 함수
   const handleStep = () => {
@@ -33,17 +34,30 @@ const NutAdd = () => {
     }
   };
 
+  // 뒤로 가기
+  const handleStepBack = () => {
+    console.log(step)
+    if (step == 1) {
+      navigate(`/home/${urlRnd}`);
+    } else {
+      console.log(step)
+      setStep(step - 1);
+    }
+  };
+
   // 일단 임시 출력용 - 나중에 api연결 - 도토리 묶음 제출
   const handleSubmit = async () => {
     if (!quizText) {
       alert("퀴즈를 만들어 주세요!!");
-    } else if(quizAns == null){
-      alert("퀴즈 답변을 작성해 주세요!!")
-    }else {
+    } else if (quizAns == null) {
+      alert("퀴즈 답변을 작성해 주세요!!");
+    } else {
       // api 보내기 로직
       try {
         // 임시코드 - urlRnd 일단 로컬스토리지 저장된거 가져오기 - 나중에 url에서 가져와야 함
-       //const testUrlRnd = localStorage.getItem("urlRnd");
+        //const testUrlRnd = localStorage.getItem("urlRnd");
+
+        setIsUploading(true); // 업로드 시작 시 모달 표시
 
         const requestJson = {
           sender: nick,
@@ -53,11 +67,11 @@ const NutAdd = () => {
             answer: quizAns,
           },
         };
-  
+
         // FormData 생성
         const formData = new FormData();
         formData.append("requestJson", JSON.stringify(requestJson)); // JSON 문자열 추가
-  
+
         // 사진 파일 추가
         photos.forEach((file) => {
           formData.append("files", file);
@@ -74,10 +88,20 @@ const NutAdd = () => {
           // 선물하기 플로우 마지막 화면 렌더링
           setStep(step + 1);
         }
-
       } catch (error) {
-        console.error(error);
-        alert("도토리 보내기 중 에러가 발생했습니다. 다시 시도해 주세요.");
+        if (error.response && error.response.status === 413) {
+          // 에러 코드 413인 경우 alert 출력
+          alert(
+            "도토리가 너무 커서 가방에 안들어가요 ㅠㅠ 사진 용량 줄여주세요!!"
+          );
+        } else {
+          console.error(error);
+          alert(
+            "도토리를 저장하는 도중 문제가 발생했어요. 다시 시도해 주세요!"
+          );
+        }
+      } finally {
+        setIsUploading(false); // 업로드 완료 후 모달 닫기
       }
     }
     // console.log(photos);
@@ -85,12 +109,10 @@ const NutAdd = () => {
     // console.log(message);
     // console.log(quizText);
     // console.log(quizAns);
-
-    
   };
 
-  const goJoin = () => {
-    navigate("/join");
+  const goLogin = () => {
+    navigate("/login");
   };
 
   return (
@@ -103,27 +125,59 @@ const NutAdd = () => {
         {step === 1 && (
           <>
             <MakePhotoBox setPhotos={setPhotos} photos={photos} />
-            <DefaultButton buttonText="다음" buttonFunc={handleStep} />
+            <ButtonLine>
+              <BackButton onClick={handleStepBack}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M14 19l-7-7 7-7" />
+                </svg>
+              </BackButton>
+              <StyledDefaultButton onClick={handleStep}>
+                다음
+              </StyledDefaultButton>
+            </ButtonLine>
           </>
         )}
         {step === 2 && (
           <>
             <MakeMessageBox setNick={setNick} setMessage={setMessage} />
-            <DefaultButton buttonText="다음" buttonFunc={handleStep} />
+            <ButtonLine>
+              <BackButton onClick={handleStepBack}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M14 19l-7-7 7-7" />
+                </svg>
+              </BackButton>
+              <StyledDefaultButton onClick={handleStep}>
+                다음
+              </StyledDefaultButton>
+            </ButtonLine>
           </>
         )}
         {step === 3 && (
           <>
             <MakeQuiz setQuizAns={setQuizAns} setQuizText={setQuizText} />
-            <DefaultButton buttonText="마치기" buttonFunc={handleSubmit} />
+            <ButtonLine>
+              <BackButton onClick={handleStepBack}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <path d="M14 19l-7-7 7-7" />
+                </svg>
+              </BackButton>
+              <StyledDefaultButton onClick={handleSubmit}>
+                마치기
+              </StyledDefaultButton>
+            </ButtonLine>
           </>
         )}
         {step === 4 && (
           <>
-            <ConfirmNutAdd goJoin={goJoin} />
+            <ConfirmNutAdd goLogin={goLogin} />
           </>
         )}
       </Content>
+      {isUploading && ( // 수정수정: 업로드 중일 때 모달 표시
+        <UploadingModal>
+          이미지를 업로드 중입니다... 잠시만 기다려주세요!
+        </UploadingModal>
+      )}
     </Container>
   );
 };
@@ -245,4 +299,59 @@ const Title = styled.div`
   color: #823b09;
   font-family: "EF_jejudoldam";
   //margin-bottom:8%;
+`;
+
+const UploadingModal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  font-size: 18px;
+  color: #333;
+  text-align: center;
+`;
+
+const ButtonLine = styled.div`
+  width: 100%;
+  height: 4.541%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5%;
+`;
+
+const BackButton = styled.div`
+  width: 9%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  background-color: #e5e5e5;
+  cursor: pointer;
+
+  svg {
+    fill: #737373;
+    width: 60%;
+    height: 60%;
+  }
+`;
+
+const StyledDefaultButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30.8%;
+  height: 100%;
+  background-color: #823b09;
+  color: white;
+  font-size: 18px;
+  border-radius: 10px;
+  cursor: pointer;
 `;
