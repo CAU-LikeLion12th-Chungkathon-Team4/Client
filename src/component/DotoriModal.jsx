@@ -252,7 +252,7 @@ const Modal = styled.div`
   background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(4px);
   position: fixed;
-  z-index: 3;
+  z-index: 999;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -60%);
