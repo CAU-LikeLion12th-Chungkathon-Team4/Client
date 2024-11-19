@@ -261,6 +261,7 @@ const Inputs = styled.div`
       color: var(--neutral-400, #A3A3A3);
     text-align: left;
     /* text/body 1 */
+    font-family: BMJUA;
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
