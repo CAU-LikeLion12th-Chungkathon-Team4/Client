@@ -17,7 +17,7 @@ export const dotoriCollectionOpen = async (dotori_collection_id) => {
 export const dotoriDelete = async (dotori_id) => {
   try {
     const accessToken = localStorage.getItem("access");
-      const response = await axios.delete(`${baseUrl}/dotori/delete/${dotori_id}`,{
+      const response = await axios.put(`${baseUrl}/dotori/delete/${dotori_id}`,{
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
