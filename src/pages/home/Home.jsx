@@ -459,7 +459,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 2%;
-  z-index: 1;
+  z-index: 5;
 `;
 
 const Logo = styled.img`
@@ -478,7 +478,7 @@ const DotoriImage = styled.img`
 
 const DotoriCount = styled.span`
   font-size: 16px;
-  color: #333;
+  color: var(--main, #823b09);
   margin-right: 20%;
 `;
 const MypageBtn = styled.button`
