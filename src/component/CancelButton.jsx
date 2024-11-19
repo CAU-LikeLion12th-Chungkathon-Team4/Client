@@ -27,4 +27,5 @@ z-index: 20;
 `;
 
 const Button = styled.div`
+  cursor: pointer;
 `;
