@@ -8,6 +8,9 @@ const Landing = () => {
   const gologin = () => {
     navigate('/login');
   } 
+  const gojoin = () => {
+    navigate('/join');
+  } 
 
 return (
   <Container >
@@ -16,6 +19,7 @@ return (
       </BackgroundWrapper>
       <Content>
       <LoginBtn onClick={gologin}>로그인</LoginBtn>
+      <JoinBtn onClick={gojoin}>회원가입</JoinBtn>
       </Content>
   </Container>
 );
@@ -148,11 +152,11 @@ const LoginBtn = styled.button`
   font-family: BMJUA;
 `;
 
-const PresentBtn = styled.button`
+const JoinBtn = styled.button`
   width: 220px;
   height: 45px;
   border-radius: 10px;
-  padding: 10px;
+  border-radius: 10px;
   border: 2px solid var(--main, #823B09);
   background: #FEF4E8;
   cursor: pointer;
