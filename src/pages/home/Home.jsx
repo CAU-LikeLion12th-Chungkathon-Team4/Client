@@ -1,3 +1,5 @@
+
+
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
@@ -8,29 +10,25 @@ import { yourUrlRndAtom } from "../../recoil/urlRndAtom.js";
 import { useRecoilState } from "recoil";
 import { isFull } from "../../api/api_nutAdd.js";
 
+// 클립보드 복사 함수
 const copyToClipboard = async (text) => {
   try {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       await navigator.clipboard.writeText(text);
       console.log("클립보드에 성공적으로 복사되었습니다.");
     } else {
-      copyToClipboardFallback(text); // Clipboard API 미지원 시 fallback 사용
+      const input = document.createElement("input");
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("copy");
+      document.body.removeChild(input);
     }
   } catch (error) {
     console.error("클립보드 복사 중 에러 발생:", error);
-    alert("클립보드 복사에 실패했습니다. 브라우저 설정을 확인해주세요.");
+    alert("복사에 실패했습니다. URL을 직접 복사해주세요.");
   }
 };
-
-const copyToClipboardFallback = (text) => {
-  const input = document.createElement("input");
-  input.value = text;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand("copy");
-  document.body.removeChild(input);
-};
-
 
 const Home = () => {
   const { urlRnd } = useParams(); // URL의 공유된 urlRnd 가져오기
@@ -43,6 +41,7 @@ const Home = () => {
     squirrelImage: "../../../source/squ/defaultSquLeft.png",
     isOwner: false, // 초기값 설정
   });
+  const navigate = useNavigate();
   const [showClipboardMessage, setShowClipboardMessage] = useState(false); // 복사 알림 메시지 상태
 
   const [clickedImgNum, setClickedImgNum] = useState(); // 지금 클릭한 도토리 가방 번호 관리
@@ -64,7 +63,29 @@ const Home = () => {
     localStorage.clear();
     navigate(`/`);
   }
-  const navigate = useNavigate();
+
+    // URL 복사 버튼 핸들러
+    const handleGiftButtonClick = async (e) => {
+      e.preventDefault();
+      const response = await isFull(yourUrlRndValue);
+  
+      if (response.data.isFull) {
+        alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
+      } else if (userData.isOwner) {
+        const currentUrl = window.location.href;
+  
+        try {
+          await copyToClipboard(currentUrl);
+          setShowClipboardMessage(true);
+          setTimeout(() => setShowClipboardMessage(false), 3000);
+        } catch (error) {
+          console.error("복사 실패:", error);
+          alert("복사에 실패했습니다. URL을 직접 복사해주세요.");
+        }
+      } else {
+        navigate(`/gift/${urlRnd}`);
+      }
+    };
 
   // 스크롤 상태를 확인하는 함수
   const checkScrollPosition = () => {
@@ -107,54 +128,41 @@ const Home = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // 데이터 가져오기
   useEffect(() => {
     const fetchData = async () => {
       const accessToken = localStorage.getItem("access");
 
       try {
-        // 사용자 데이터 가져오기
         const user = await fetchUserData(urlRnd, accessToken);
-        const localUrlRnd = localStorage.getItem("urlRnd");
-        const isOwner = localUrlRnd === urlRnd;
-
+        const isOwner = localStorage.getItem("urlRnd") === urlRnd;
         setUserData({ ...user, isOwner });
 
-        // 도토리 데이터 가져오기
         const rawDotoriData = await fetchDotoriCollection(urlRnd);
-
-        // createdAt 기준 정렬 후 custom_id 재할당
         const sortedDotoriData = rawDotoriData
           .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-          .map((item, index) => ({
-            ...item,
-            custom_id: index, // 정렬된 순서에 맞게 ID 재할당
-          }));
+          .map((item, index) => ({ ...item, custom_id: index }));
 
         setDotoriData(sortedDotoriData);
-
-        console.log("Fetched Dotori Data:", sortedDotoriData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [urlRnd, navigate]);
+  }, [urlRnd]);
 
-  // 이미지 클릭 핸들러 수정
-  const handleImageClick = (lock, dotori_collection_id) => {
-    console.log(lock);
-    if (lock && (localStorage.getItem("urlRnd") === urlRnd)) {
-      setquizModalOpen(true); // 퀴즈 모달 열기
-    } else if (lock && (localStorage.getItem("urlRnd") != urlRnd)){
-      alert("도토리 나무 주인이 아니에요!!")
-    }else{
-      console.log("hihi")
-      setdotoriModalOpen(true); // 도토리 모달 열기
-    }
-    setClickedImgNum(dotori_collection_id);
-    console.log(dotori_collection_id);
-  };
+ // 도토리 이미지 클릭 핸들러
+ const handleImageClick = (lock, dotori_collection_id) => {
+  if (lock && localStorage.getItem("urlRnd") === urlRnd) {
+    setquizModalOpen(true);
+  } else if (lock) {
+    alert("도토리 나무 주인이 아니에요!!");
+  } else {
+    setdotoriModalOpen(true);
+  }
+  setClickedImgNum(dotori_collection_id);
+};
 
 /*
 //보낸 코드
@@ -198,27 +206,6 @@ const handleGiftButtonClick = async (e) => {
 };
 */
 
-const handleGiftButtonClick = async (e) => {
-  e.preventDefault();
-  const response = await isFull(yourUrlRndValue);
-
-  if (response.data.isFull) {
-    alert("도토리가 가득 찼어요!! 더 이상 보낼 수 없어요!!");
-  } else if (userData.isOwner) {
-    const currentUrl = window.location.href;
-
-    try {
-      await copyToClipboard(currentUrl);
-      setShowClipboardMessage(true);
-      setTimeout(() => setShowClipboardMessage(false), 3000); // 3초 후 메시지 숨기기
-    } catch (error) {
-      console.error("복사 실패:", error);
-      alert("복사에 실패했습니다. URL을 직접 복사해주세요.");
-    }
-  } else {
-    navigate(`/gift/${urlRnd}`); // 도토리 선물하기 페이지로 이동
-  }
-};
 
 //                <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
 
@@ -363,7 +350,6 @@ const handleGiftButtonClick = async (e) => {
                 <GiftButton onClick={handleGiftButtonClick} onTouchStart={handleGiftButtonClick}>
                   {userData.isOwner ? "도토리 요청하기" : "도토리 선물하기"}
                 </GiftButton>
-                {showClipboardMessage}
               </RightSection>
             </BoxWrapper>
           </BottomSection>
