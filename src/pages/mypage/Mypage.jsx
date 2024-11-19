@@ -303,7 +303,7 @@ const DotoriImage = styled.img`
 
 const DotoriCount = styled.span`
   font-size: 16px;
-  color: #333;
+  color: var(--main, #823b09);
   margin-right: 20px;
   margin-top: 5px;
 `;
