@@ -28,7 +28,7 @@ const NutAdd = () => {
   // step 관리 함수
   const handleStep = () => {
     if (photos.length == 0) {
-      alert("사진을 등록 해주세요!!");
+      alert("사진을 등록해 주세요!!");
     } else {
       setStep(step + 1);
     }

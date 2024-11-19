@@ -63,7 +63,7 @@ const MakePhotoBox = ({ setPhotos, photos }) => {
     <Outer>
       <Container>
         <Title>| STEP 1 |</Title>
-        <Text>사진을 업로드해 주세요</Text>
+        <Text>사진을 업로드해 주세요.</Text>
         <SubContainer>
           <Arrow onClick={goPrev}>&lt;</Arrow>
           {preview ? (
@@ -86,7 +86,7 @@ const MakePhotoBox = ({ setPhotos, photos }) => {
             style={{ display: "none" }}
           />
         </SelectPhoto>
-        <SubText>사진 파일 업로드는 한 번에 7장까지 가능해요</SubText>
+        <SubText>사진 파일 업로드는 한 번에 7장까지 가능해요.</SubText>
       </Container>
     </Outer>
   );
