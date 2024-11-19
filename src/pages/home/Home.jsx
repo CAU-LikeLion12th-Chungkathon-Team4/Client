@@ -299,6 +299,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
+  overflow-y: hidden;
 `;
 
 const ScrollToBottomButton = styled.img`
@@ -317,7 +318,7 @@ const BackgroundWrapper = styled.div`
   margin-top: 470vh;
   height: calc(100vw * 12.92);
   background-image: url("/source/fullTree.png");
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: top center;
   display: flex;
@@ -356,7 +357,7 @@ const TopBar = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-right: 2%;
-  z-index: 1;
+  z-index: 999;
 `;
 
 const Logo = styled.img`
@@ -381,6 +382,7 @@ const DotoriCount = styled.span`
 const MypageBtn = styled.button`
   background-color: transparent;
   border: none;
+  margin-top: 7%;
 `;
 const LockImagesWrapper = styled.div`
   width: 56%;
@@ -392,13 +394,18 @@ const LockImagesWrapper = styled.div`
   bottom: 6.5%; /* 배경 높이의 2/3 지점 */
   z-index: 1;
 
-  @media (max-width: 768px) { /* 태블릿 및 작은 화면 */
-    gap: 7.4vh;
+  @media (max-width: 430px) { /* 태블릿 및 작은 화면 */
+    gap: 7.5vh;
   }
 
-  @media (max-width: 400px) { /* 모바일 화면 */
-    gap: 7.7vh;
+  @media (max-width: 420px) { /* 태블릿 및 작은 화면 */
+    gap: 7.3vh;
   }
+
+  @media (max-width: 392px) { /* 태블릿 및 작은 화면 */
+    gap: 7vh;
+  }
+
 `;
 
 const LockItem = styled.div`
@@ -424,8 +431,8 @@ const SenderName = styled.span`
   color: white;
   text-align: center;
   word-break: break-word;
-  margin-left: ${(props) => (props.align === "left" ? "7%" : "0")};
-  margin-right: ${(props) => (props.align === "right" ? "7%" : "0")};
+  margin-left: ${(props) => (props.align === "left" ? "-7%" : "0")};
+  margin-right: ${(props) => (props.align === "right" ? "-7%" : "0")};
 `;
 
 const BottomSection = styled.div`
