@@ -67,7 +67,6 @@ useEffect(() => {
     <Container>
       <BackgroundWrapper>
         <BackgroundImage src="/source/mypage.png" alt="Background" />
-      </BackgroundWrapper>
       <TopBar>
         <Logo onClick={() => window.location.href = `/home/${localStorage.getItem("urlRnd")}`} src="/source/logoWithName.png" alt="Logo" />
         <DotoriSection>
@@ -101,6 +100,7 @@ useEffect(() => {
             <UserData>{userData.nickname}</UserData>
             <DaramImage src={userData.squirrelImage} alt="Daram" />
         </Content>
+        </BackgroundWrapper>
     </Container>
   )
 }
@@ -269,53 +269,48 @@ const DaramImage = styled.img`
 `;
 
 const TopBar = styled.div`
-  top: 0;
-  position: ralative;
-  height: 100%;
-  width: 100%;
+  top: 2%;
+  position: fixed;
+  height: 50px;
+  width: 90%; /* 기본적으로 화면 전체 너비 */
+  max-width: 380px; /* BackgroundWrapper의 최대 너비에 맞추기 */
   display: flex;
   justify-content: space-between;
-  flex-direction: row;
-  //align-items: ;
-  margin-left: 20px;
-  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  //border: 1px solid black;
-  padding-top: 1.5rem;
+  align-items: center;
+  margin-right: 2%;
+  z-index: 999;
 `;
 
 const Logo = styled.img`
   height: 30px;
-  margin-left: 10px;
+  /* margin-left: 10px; */
   cursor: pointer;
 `;
 
 const DotoriSection = styled.div`
   display: flex;
-  margin-right: 20px;
+  align-items: center;
 `;
 
 const DotoriImage = styled.img`
   height: 20px;
-  margin-right: 5px;
+  margin-right: 10px;
   cursor: pointer;
-  margin-top: 3px;
+  /* margin-top: 3px; */
 `;
 
 const DotoriCount = styled.span`
   font-size: 16px;
   color: var(--main, #823b09);
-  margin-right: 20px;
-  margin-top: 5px;
+  margin-right: 20%;
+  /* margin-top: 5px; */
 `;
 const MypageBtn = styled.button`
 background-color: transparent;
 border: none;
-display: flex;
 cursor: pointer;
-margin-top: 1px;
+margin-top: 7%;
 `;
-
 
 const Buttons = styled.div`
   display: flex;
