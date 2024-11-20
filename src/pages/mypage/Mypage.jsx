@@ -363,7 +363,7 @@ const ModalContainer = styled.div`
   background: rgba(38, 38, 38, 0.48);
   backdrop-filter: blur(2px);
   z-index: 100;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
