@@ -18,8 +18,8 @@ const QuizModal = ({ setquizModalOpen, clickedImgNum }) => {
     setquizModalOpen(false);
   };
 
-  const handleAnswer = async(userAnswer) => {
-    const response = await replyQuiz(clickedImgNum, userAnswer)
+  const handleAnswer = async (userAnswer) => {
+    const response = await replyQuiz(clickedImgNum, userAnswer);
     //console.log(response.data)
     if (userAnswer === quizData.answer) {
       setIsCorrectModalOpen(true);
@@ -35,6 +35,10 @@ const QuizModal = ({ setquizModalOpen, clickedImgNum }) => {
         const response = await getQuiz(clickedImgNum);
         setQuizData(response.data);
       } catch (error) {
+        alert("다시 로그인 해주세요!!");
+        setquizModalOpen(false);
+        localStorage.clear();
+
         console.error(error);
       }
     };
@@ -44,8 +48,18 @@ const QuizModal = ({ setquizModalOpen, clickedImgNum }) => {
 
   return (
     <>
-      {isCorrectModalOpen === true && <CorrectModal setquizModalOpen={setquizModalOpen} setIsCorrectModalOpen={setIsCorrectModalOpen} />}
-      {isWrongModalOpen === true && <WrongModal setquizModalOpen={setquizModalOpen} setIsWrongModalOpen={setIsWrongModalOpen} />}
+      {isCorrectModalOpen === true && (
+        <CorrectModal
+          setquizModalOpen={setquizModalOpen}
+          setIsCorrectModalOpen={setIsCorrectModalOpen}
+        />
+      )}
+      {isWrongModalOpen === true && (
+        <WrongModal
+          setquizModalOpen={setquizModalOpen}
+          setIsWrongModalOpen={setIsWrongModalOpen}
+        />
+      )}
       {isOpen === true && (
         <Modal>
           <CancelButton onClick={closeModal} />
