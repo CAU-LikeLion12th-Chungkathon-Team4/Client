@@ -38,6 +38,7 @@ const QuizModal = ({ setquizModalOpen, clickedImgNum }) => {
         alert("다시 로그인 해주세요!!");
         setquizModalOpen(false);
         localStorage.clear();
+        navigator("/")
 
         console.error(error);
       }
